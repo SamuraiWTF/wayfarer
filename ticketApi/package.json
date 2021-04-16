@@ -1,0 +1,33 @@
+{
+  "name": "@wayfarerwtf/ticketapi",
+  "version": "1.0.0",
+  "description": "Ticketing system backend API",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamuraiWTF/wayfarer.git"
+  },
+  "keywords": [
+    "security",
+    "training",
+    "api",
+    "target"
+  ],
+  "author": "Mic Whitehorn-Gillam (mgillam)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SamuraiWTF/wayfarer/issues"
+  },
+  "homepage": "https://github.com/SamuraiWTF/wayfarer#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7"
+  },
+  "devDependencies": {
+    "standard": "^16.0.3"
+  }
+}
