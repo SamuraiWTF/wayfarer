@@ -12,5 +12,5 @@ RUN npm install
 # process will start here instead of above.
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3001
 CMD npm run start

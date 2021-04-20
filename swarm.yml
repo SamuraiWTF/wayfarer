@@ -12,7 +12,7 @@ services:
         networks:
             - corp-net
         ports:
-            - "3001:3000"
+            - "3001:3001"
     sqldb:
         image: wayfarer-db:latest
         deploy:
