@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+    ticketapp:
+        image: ticket-app:latest
+        ports:
+            - "3000:3000"
+    ticketapi:
+        image: ticket-api:latest
+        depends_on:
+            - sqldb
+        networks:
+            - corp-net
+        ports:
+            - "3001:3000"
+    sqldb:
+        image: wayfarer-db:latest
+        deploy:
+            resources:
+                limits:
+                    memory: 4G
+                reservations:
+                    memory: 2G
+    #    command: --default-authentication-plugin=mysql_native_password
+    #    restart: always
+        networks:
+            - corp-net
+        environment:
+            MYSQL_ROOT_PASSWORD: changeme
+        ports:
+            - "3306:3306"
+
+networks:
+    corp-net:
+        driver: overlay
