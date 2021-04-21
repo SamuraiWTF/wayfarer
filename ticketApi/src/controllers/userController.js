@@ -1,13 +1,12 @@
 const users = require('../data/users');
 
 const userController = {
-    authenticate: (req, res) => {
-        let authToken = users.authenticate(req.body.username, req.body.password)
-        if(authToken) {
-            res.status(200).send({ code: 200, data: { token: 'notimplemented', refresh: 'notimplemented '}})
-        } else {
+    authenticate: async (req, res) => {
+        users.authenticate(req.body.username, req.body.password).then((token) => {
+            res.status(200).send({ code: 200, data: { token: token, refresh: 'notimplemented '}})
+        }).catch((err) => {
             res.status(401).send({ code: 401, error: 'Invalid credentials' })
-        }
+        })
     },
     getUser: (req, res) => {
         let user = users.getUserById(req.params.id)

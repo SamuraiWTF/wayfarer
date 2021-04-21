@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 const TicketItemList = ({ data, showTeam }) => {
-    console.log('tldata', data)
     let rows = data.map(row => { 
         return <tr>
             <td>{row.ticketId}</td>

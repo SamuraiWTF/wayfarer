@@ -20,7 +20,6 @@ const TicketList = () => {
         return data.error
     }
 
-    console.log('data', data)
     let ticketData = data.data;
     return <div className="container">
         <h1 className="title">
