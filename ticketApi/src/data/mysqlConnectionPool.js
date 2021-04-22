@@ -6,4 +6,4 @@ const pool = mysql.createPool({
     database: 'tickets'
 })
 
-module.exports = pool;
+module.exports = pool

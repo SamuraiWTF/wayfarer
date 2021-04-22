@@ -1,20 +1,22 @@
 const users = require('../data/users');
+const { convertToHttp } = require('../data/errorCodes');
 
 const userController = {
     authenticate: async (req, res) => {
         users.authenticate(req.body.username, req.body.password).then((token) => {
-            res.status(200).send({ code: 200, data: { token: token, refresh: 'notimplemented '}})
+            res.status(200).send({ code: 200, data: { token: token }})
         }).catch((err) => {
-            res.status(401).send({ code: 401, error: 'Invalid credentials' })
+            let { status, message } = convertToHttp(err)
+            res.status(status).send({ code: status, error: message })
         })
     },
     getUser: (req, res) => {
-        let user = users.getUserById(req.params.id)
-        if(user) {
+        users.getUserById(req.params.id).then((user) => {
             res.status(200).send({ code: 200, data: user })
-        } else {
-            res.status(404).send({ code: 404, error: 'User not found'})
-        }
+        }).catch((err) => {
+            let { status, message } = convertToHttp(err)
+            res.status(status).send({ code: status, error: message })
+        })
     }
 }
 

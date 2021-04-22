@@ -1,45 +1,70 @@
 const authUtils = require('./authUtils')
 const connectionPool = require('./mysqlConnectionPool')
+const { errorCodes } = require('./errorCodes')
 
 const removeKeys = (obj, keyArray) => {
     keyArray.forEach(key => delete obj[key])
     return obj
 }
 
-let mockData = [
-    { id: 1, name: 'Captain Beard', username: 'beard@wayfarertf.test', salt: undefined, password: undefined }
-]
-
 const users = {
     authenticate: (username, password) => {
         return new Promise((resolve, reject) => {
             connectionPool.query('SELECT * FROM users WHERE username = ?', [username], (error, results, fields) => {
                 if(error) {
-                    reject({ type: 'DBERR', details: error})
+                    return reject({ type: errorCodes.DBERR, details: error })
                 } else {
                     if(results.length === 1 && results[0].password === authUtils.hashWithSalt(password, results[0].salt).hash) {
                         let token = authUtils.createAuthToken(results[0])
-                        resolve(token)
+                        return resolve(token)
                     }
                     // invalid user or password
-                    reject({ type: 'NOAUTH', details: 'Invalid credentials.' })
+                    reject({ type: errorCodes.NOAUTH, details: 'Invalid credentials.' })
                 }
             })
         })
     },
     setPassword: (id, password) => {
-        let userIndex = mockData.findIndex(user => user.id = id)
-        if(userIndex !== -1) {
-          let storedCreds = authUtils.hashWithSalt(password);
-          mockData[userIndex].password = storedCreds.hash;
-          mockData[userIndex].salt = storedCreds.salt;
-          return true
-        }
-        return false
+        return new Promise((resolve, reject) => {
+            connectionPool.getConnection((err, connection) => {
+                if(err) {
+                    connection.release()
+                    reject({ type: errorCodes.DBERR, details: err })
+                } else {
+                    connection.query('SELECT * FROM users WHERE id = ?', [id], (error, results, fields) => {
+                        if(error) {
+                            connection.release()
+                            return reject({ type: errorCodes.DBERR, details: err })
+                        }
+                        if(results.length === 0) {
+                            connection.release()
+                            return reject({ type: errorCodes.NOREC, details: 'No user found for supplied ID.' })
+                        }
+                        let {hash, salt} = authUtils.hashWithSalt(password)
+                        connection.query('UPDATE users SET password = ?, salt = ? WHERE id = ?', [hash, salt, id], (error, results, fields) => {
+                            connection.release()
+                            if(error) {
+                                return reject({ type: errorCodes.DBERR, details: error })
+                            }
+                            resolve(true)
+                        })
+                    })
+                }
+            })
+        })
     },
     getUserById: (id) => {
-        let user = mockData.find(userRec => userRec.id == id)
-        return user && removeKeys(user, ['password', 'salt'])
+        return new Promise((resolve, reject) => {
+            connectionPool.query('SELECT * FROM users WHERE id = ?', [id], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                if(results.length === 0) {
+                    return reject({ type: errorCodes.NOREC, details: 'No user found for supplied ID.'})
+                }
+                resolve(removeKeys(results[0], ['password', 'salt']))
+            })
+        })
     }
 }
 

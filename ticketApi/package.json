@@ -4,7 +4,9 @@
   "description": "Ticketing system backend API",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon src/index.js",
+    "start": "forever start src/index.js",
+    "stop": "forever stop src/index.js",
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,13 +28,14 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "forever": "^3.0.4",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.7",
     "pbkdf2": "^3.1.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "nodemon": "^2.0.7",
     "standard": "^16.0.3"
   }
 }

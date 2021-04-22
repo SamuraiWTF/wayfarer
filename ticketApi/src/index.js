@@ -3,11 +3,9 @@ const cors = require('cors')
 
 const app = express()
 
-const connectionPool = require('./data/mysqlConnectionPool');
-
 const userController = require('./controllers/userController')
 const ticketController = require('./controllers/ticketController');
-const pool = require('./data/mysqlConnectionPool');
+const teamController = require('./controllers/teamController');
 
 const corsOptions = {
   origin: ['http://localhost:3000'],
@@ -37,6 +35,10 @@ app.post('/authenticate', userController.authenticate)
 app.get('/user/:id', userController.getUser)
 
 app.get('/user/:userId/tickets', ticketController.getTicketsByUser)
+
+app.get('/user/:userId/teams', teamController.getTeamsByUser)
+
+app.get('/team/:teamId', teamController.getTeamById)
 
 app.listen(3001)
 

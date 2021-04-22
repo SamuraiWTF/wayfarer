@@ -1,17 +1,22 @@
 const teams = require('../data/teams');
+const { convertToHttp } = require('../data/errorCodes');
 
 const teamController = {
   getTeamById: (req, res) => {
-    let team = teams.getTeamById(req.params.teamId);
-    if(team) {
-        req.status(200).json({ code: 200, data: team })
-    } else {
-        res.status(404).json({ code: 404, error: 'Team not found.' })
-    }
+    teams.getTeamDetails(req.params.teamId).then((team) => {
+      res.status(200).json({ code: 200, data: team })
+    }).catch((err) => {
+      let { status, message } = convertToHttp(err)
+      res.status(status).json({ code: status, error: message })
+    })
   },
   getTeamsByUser: (req, res) => {
-    let userTeams = teams.getTeamsByUser(req.params.userId)
-    req.status(200).json({ code: 200, data: userTeams || [] })
+    teams.getTeamsByUser(req.params.userId).then((userTeams) => {
+      res.status(200).json({ code: 200, data: userTeams || [] })
+    }).catch((err) => {
+      let { status, message } = convertToHttp(err)
+      res.status(status).json({ code: status, error: message })
+    })
   }
 }
 
