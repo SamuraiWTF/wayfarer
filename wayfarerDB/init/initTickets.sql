@@ -1,6 +1,41 @@
 CREATE DATABASE tickets;
 USE tickets;
 
+-- Polyfill for UUID stuff.
+
+DELIMITER $$
+
+CREATE FUNCTION BIN_TO_UUID(b BINARY(16), f BOOLEAN)
+RETURNS CHAR(36)
+DETERMINISTIC
+BEGIN
+   DECLARE hexStr CHAR(32);
+   SET hexStr = HEX(b);
+   RETURN LOWER(CONCAT(
+        IF(f,SUBSTR(hexStr, 9, 8),SUBSTR(hexStr, 1, 8)), '-',
+        IF(f,SUBSTR(hexStr, 5, 4),SUBSTR(hexStr, 9, 4)), '-',
+        IF(f,SUBSTR(hexStr, 1, 4),SUBSTR(hexStr, 13, 4)), '-',
+        SUBSTR(hexStr, 17, 4), '-',
+        SUBSTR(hexStr, 21)
+    ));
+END$$
+
+
+CREATE FUNCTION UUID_TO_BIN(uuid CHAR(36), f BOOLEAN)
+RETURNS BINARY(16)
+DETERMINISTIC
+BEGIN
+  RETURN UNHEX(CONCAT(
+  IF(f,SUBSTRING(uuid, 15, 4),SUBSTRING(uuid, 1, 8)),
+  SUBSTRING(uuid, 10, 4),
+  IF(f,SUBSTRING(uuid, 1, 8),SUBSTRING(uuid, 15, 4)),
+  SUBSTRING(uuid, 20, 4),
+  SUBSTRING(uuid, 25))
+  );
+END$$
+
+DELIMITER ;
+
 -- Create the tables
 
 CREATE TABLE users 
@@ -16,9 +51,7 @@ CREATE TABLE users
 CREATE TABLE teams (
     id INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
-    -- owner_id INT UNSIGNED,
     PRIMARY KEY (id)
-    -- FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE TABLE team_memberships (
@@ -30,6 +63,33 @@ CREATE TABLE team_memberships (
     INDEX(team_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+);
+
+CREATE TABLE tickets (
+    id BINARY(16) UNIQUE PRIMARY KEY,
+    title VARCHAR(128),
+    body TEXT,
+    team_id INT UNSIGNED NOT NULL,
+    assigned_to INT UNSIGNED,
+    status VARCHAR(24) NOT NULL DEFAULT 'open',
+    created_by INT UNSIGNED,
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    due_date TIMESTAMP NULL,
+    FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
+    FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL -- For the case where a user is no longer.
+);
+
+CREATE TABLE ticket_comments (
+    id INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
+    ticket_id BINARY(16) NOT NULL,
+    body TEXT,
+    created_by INT UNSIGNED,
+    created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    reply_to_comment INT UNSIGNED,
+    FOREIGN KEY (ticket_id) REFERENCES tickets(id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (reply_to_comment) REFERENCES ticket_comments(id) ON DELETE CASCADE
 );
 
 -- Seed the data
@@ -75,7 +135,32 @@ INSERT INTO team_memberships(user_id, team_id, role) VALUES (
      3,
      @help_desk_team_id,
      'member'
+),(
+    1,
+    @cust_supp_team_id,
+    'owner'
+),(
+    2,
+    @cust_supp_team_id,
+    'manager'
+),(
+    3,
+    @cust_supp_team_id,
+    'member'
 );
+
+INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, due_date) VALUES (
+    UUID_TO_BIN(UUID(), 1),
+    'Virus scanner blocking notepad++',
+    'The virus scanner keeps flagging my notepad++ app whenever I open it. I''m also having issues accessing my Documents folder.',
+    @help_desk_team_id,
+    1,
+    'open',
+    3,
+    CURRENT_TIMESTAMP
+);
+
+-- Create App User
 
 CREATE USER IF NOT EXISTS 'ticketapp' IDENTIFIED BY 't1ck3tw1ck3t';
 

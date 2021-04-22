@@ -40,6 +40,8 @@ app.get('/user/:userId/teams', teamController.getTeamsByUser)
 
 app.get('/team/:teamId', teamController.getTeamById)
 
+app.get('/team/:teamId/tickets', ticketController.getTicketsByTeam)
+
 app.listen(3001)
 
 console.log('listening')

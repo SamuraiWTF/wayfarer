@@ -1,28 +1,40 @@
-let mockData = [
-    { ticketId: 1, title: 'Virus scanner blocking Notepad++', team: 1, assignedTo: 1, status: 'open', due: new Date()},
-    { ticketId: 2, title: 'Monitor is broken', team: 1, assignedTo: 1, status: 'closed', due: new Date()},
-    { ticketId: 3, title: 'Login isnt working', team: 2, assignedTo: 1, status: 'open', due: new Date()},
-    { ticketId: 4, title: 'Cant checkout on website', team: 2, assignedTo: 3, status: 'open', due: new Date()}
-]
-
-let mockDataDetails = {
-    1: {
-        description: `The virus scanner keeps popping up when I try to open Notepad++. 
-        Also, I can't find any of my files.
-        `,
-        comments: [
-            { timestamp: new Date(), user: 1, text: 'Have you tried rebooting?' }
-        ]
-        
-    }
-}
+const connectionPool = require('./mysqlConnectionPool')
+const { errorCodes } = require('./errorCodes')
 
 const tickets = {
     getTicketsByAssignedUser: (userId) => {
-        return mockData.filter(ticketRec => ticketRec.assignedTo == userId)
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`SELECT BIN_TO_UUID(ti.id, 1) as id, ti.title, ti.body, 
+            ti.team_id, t.name AS team_name, ti.assigned_to, ua.name AS assigned_to_name, ti.status,
+             ti.created_by, uc.name AS created_by_name, ti.created_date, ti.due_date 
+             FROM tickets ti 
+             RIGHT JOIN users ua ON ti.assigned_to = ua.id 
+             RIGHT JOIN users uc ON ti.created_by = uc.id
+             RIGHT JOIN teams t ON ti.team_id = t.id
+             WHERE ti.assigned_to = ?`, [ userId ], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results)
+            })
+        })
     },
     getTicketsByTeam: (teamId) => {
-        return mockData.filter(ticketRec => ticketRec.team == teamId)
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`SELECT BIN_TO_UUID(ti.id, 1) as id, ti.title, ti.body, 
+            ti.team_id, t.name AS team_name, ti.assigned_to, ua.name AS assigned_to_name, ti.status,
+             ti.created_by, uc.name AS created_by_name, ti.created_date, ti.due_date 
+             FROM tickets ti 
+             RIGHT JOIN users ua ON ti.assigned_to = ua.id 
+             RIGHT JOIN users uc ON ti.created_by = uc.id
+             RIGHT JOIN teams t ON ti.team_id = t.id
+             WHERE ti.team_id = ?`, [ teamId ], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results)
+            })
+        })
     }
 }
 

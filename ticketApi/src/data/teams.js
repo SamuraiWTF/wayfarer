@@ -46,10 +46,8 @@ const teams = {
                         // query the members
                         connectionPool.query('SELECT u.id as user_id, u.name, m.role FROM team_memberships m RIGHT JOIN users u ON m.user_id = u.id WHERE m.team_id = ? ORDER BY m.role ASC', [teamId], (error, results, fields) => {
                             if(error) {
-                                console.log('query2 err ', error)
                                 reject({ type: errorCodes.DBERR, details: error })
                             } else {
-                                console.log('resolve2')
                                 resolve(results)
                             }
                         })
