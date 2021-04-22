@@ -4,10 +4,10 @@ const NavBar = () => {
   const currentUserId = localStorage.getItem('userId')
 
   return ( 
-  <nav className="navbar" role="navigation" aria-label="main navigation">
+  <nav className="navbar is-info" role="navigation" aria-label="main navigation">
     <div className="navbar-brand">
-        <a className="navbar-item" href="https://bulma.io">
-            <img src="https://bulma.io/images/bulma-logo.png" alt="logo" width="112" height="28" />
+        <a className="navbar-item is-tall" href="/">
+            <img src="/wayfarer_tf_logo.svg" className="is-tall" alt="logo" width="112" height="28" />
         </a>
         <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
@@ -48,7 +48,7 @@ const NavBar = () => {
     <div className="navbar-end">
       <div className="navbar-item">
         <div className="buttons">
-          <a className="button is-primary">
+          <a className="button is-link">
             Log in
           </a>
         </div>

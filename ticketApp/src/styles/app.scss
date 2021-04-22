@@ -1,4 +1,6 @@
-@import './colors';
+@import './theme';
 @import '../../node_modules/bulma/bulma.sass';
 
-
+.navbar-item img.is-tall {
+    max-height: 4.75rem;
+}
