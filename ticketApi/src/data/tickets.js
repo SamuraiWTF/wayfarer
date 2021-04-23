@@ -21,7 +21,7 @@ const tickets = {
     },
     getTicketsByTeam: (teamId) => {
         return new Promise((resolve, reject) => {
-            connectionPool.query(`SELECT BIN_TO_UUID(ti.id, 1) as id, ti.title, ti.body, 
+            connectionPool.query(`SELECT BIN_TO_UUID(ti.id, 1) as id, ti.title, 
             ti.team_id, t.name AS team_name, ti.assigned_to, ua.name AS assigned_to_name, ti.status,
              ti.created_by, uc.name AS created_by_name, ti.created_date, ti.due_date 
              FROM tickets ti 
@@ -33,6 +33,21 @@ const tickets = {
                     return reject({ type: errorCodes.DBERR, details: error })
                 }
                 resolve(results)
+            })
+        })
+    },
+    getTicketDetailsById: (ticketId) => {
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`SELECT BIN_TO_UUID(ti.id, 1) as id, ti.title, ti.body, ti.status
+            FROM tickets ti
+            WHERE BIN_TO_UUID(ti.id, 1) = ?`, [ticketId], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                if(results.length === 0) {
+                    return reject({ type: errorCodes.NOREC, details: `No ticket found for id: ${ticketId}`})
+                }
+                resolve(results[0])
             })
         })
     }

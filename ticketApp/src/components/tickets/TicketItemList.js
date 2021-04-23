@@ -1,23 +1,25 @@
 import { Link } from "react-router-dom";
 
+const formatDate = (dateString) => {
+    return Intl.DateTimeFormat(navigator.language, { weekday: 'short', month: 'long', day: 'numeric' }).format(new Date(dateString));
+}
+
 const TicketItemList = ({ data, showTeam }) => {
     let rows = data.map(row => { 
-        return <tr>
-            <td>{row.ticketId}</td>
-            <td>{row.title}</td>
-            <td><Link to={`/user/${row.assignedTo.id}`}>
-                {row.assignedTo.name}</Link>
+        return <tr key={row.id}>
+            <td><Link to={`/ticket/${row.id}`}>{row.title}</Link></td>
+            <td><Link to={`/user/${row.assigned_to}`}>
+                {row.assigned_to_name}</Link>
             </td>
             <td>{row.status}</td>
-            <td>{row.due ? row.due : 'none'}</td>
-            <td>{row.team.name}</td>
+            <td>{row.due_date ? formatDate(row.due_date) : 'none'}</td>
+            <td><Link to={`/team/${row.team_id}`}>{row.team_name}</Link></td>
         </tr> 
     })
     return (
         <table className="table">
             <thead>
                 <tr>
-                    <th>id</th>
                     <th>title</th>
                     <th>assignedTo</th>
                     <th>status</th>

@@ -1,25 +1,26 @@
 const tickets = require('../data/tickets')
-const users = require('../data/users')
-const teams = require('../data/teams')
-const { convertToHttp } = require('../data/errorCodes')
+const { sendErrorResponse, sendSuccessResponse } = require('./responseUtils')
 
 const ticketController = {
     getTicketsByUser: (req, res) => {
         tickets.getTicketsByAssignedUser(req.params.userId).then((tickets) => {
-            res.status(200).json({ code: 200, data: tickets })
+            sendSuccessResponse(res, tickets)
         }).catch((err) => {
-            console.log('error ', err)
-            let { status, message } = convertToHttp(err)
-            res.status(status).json({ code: status, error: message })
+            sendErrorResponse(res, err)
         })
     },
     getTicketsByTeam: (req, res) => {
         tickets.getTicketsByTeam(req.params.teamId).then((tickets) => {
-            res.status(200).json({ code: 200, data: tickets })
+            sendSuccessResponse(res, tickets)
         }).catch((err) => {
-            console.log('error ', err)
-            let { status, message } = convertToHttp(err)
-            res.status(status).json({ code: status, error: message })
+            sendErrorResponse(res, err)
+        })
+    },
+    getTicketDetailsById: (req, res) => {
+        tickets.getTicketDetailsById(req.params.ticketId).then((ticket) => {
+            sendSuccessResponse(res, ticket)
+        }).catch((err) => {
+            sendErrorResponse(res, err)
         })
     }
 }

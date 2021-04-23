@@ -6,9 +6,17 @@ import TicketDetails from "./views/TicketDetails";
 import TicketList from "./views/TicketList";
 import TeamList from "./views/TeamList";
 import UserDetails from "./views/UserDetails";
+import Login from "./views/Login";
+import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 
-const Routes = () => {
-  return (
+const clearAuth = () => {
+  localStorage.removeItem('authToken')
+}
+
+const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
+  let authenticated = (currentUserId && authToken) ? true : false;
+  if(authenticated) {
+    return (
     <Router>
         <main>
             <NavBar />
@@ -29,6 +37,15 @@ const Routes = () => {
         </main>
     </Router>
   );
+  } else {
+    return (
+      <Router>
+        <main>
+          <Route path="/" render={props => <Login authStatusChanged={authStatusChanged} />} />
+        </main>
+      </Router>
+    )
+  }
 }
 
 export default Routes;

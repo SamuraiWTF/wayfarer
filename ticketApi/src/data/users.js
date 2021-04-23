@@ -10,13 +10,14 @@ const removeKeys = (obj, keyArray) => {
 const users = {
     authenticate: (username, password) => {
         return new Promise((resolve, reject) => {
-            connectionPool.query('SELECT * FROM users WHERE username = ?', [username], (error, results, fields) => {
+            connectionPool.query('SELECT id, password, salt, username, isadmin FROM users WHERE username = ?', [username], (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 } else {
                     if(results.length === 1 && results[0].password === authUtils.hashWithSalt(password, results[0].salt).hash) {
                         let token = authUtils.createAuthToken(results[0])
-                        return resolve(token)
+                        let userId = results[0].id;
+                        return resolve({ token: token, userId, userId })
                     }
                     // invalid user or password
                     reject({ type: errorCodes.NOAUTH, details: 'Invalid credentials.' })

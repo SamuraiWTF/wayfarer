@@ -30,3 +30,17 @@ exports.createAuthToken = (user) => {
     }
     return jwt.sign(claims, signingSecret, { expiresIn: '1h' })
 }
+
+exports.validateTokenSig = (token) => {
+    try {
+        let claims = jwt.verify(token, signingSecret)
+        return claims
+    } catch(err) {
+        console.log('token validation failed: ', err)
+        return false
+    }
+}
+
+exports.getClaims = (token) => {
+
+}

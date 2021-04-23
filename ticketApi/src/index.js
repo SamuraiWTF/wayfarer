@@ -4,8 +4,10 @@ const cors = require('cors')
 const app = express()
 
 const userController = require('./controllers/userController')
-const ticketController = require('./controllers/ticketController');
-const teamController = require('./controllers/teamController');
+const ticketController = require('./controllers/ticketController')
+const teamController = require('./controllers/teamController')
+
+const iam = require('./middleware/iam')
 
 const corsOptions = {
   origin: ['http://localhost:3000'],
@@ -32,7 +34,7 @@ app.get('/', (req, res) => {
 
 app.post('/authenticate', userController.authenticate)
 
-app.get('/user/:id', userController.getUser)
+app.get('/user/:id', iam.validateTokenSig, userController.getUser)
 
 app.get('/user/:userId/tickets', ticketController.getTicketsByUser)
 
@@ -41,6 +43,8 @@ app.get('/user/:userId/teams', teamController.getTeamsByUser)
 app.get('/team/:teamId', teamController.getTeamById)
 
 app.get('/team/:teamId/tickets', ticketController.getTicketsByTeam)
+
+app.get('/ticket/:ticketId', ticketController.getTicketDetailsById)
 
 app.listen(3001)
 
