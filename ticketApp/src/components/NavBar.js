@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 
-const NavBar = () => {
-  const currentUserId = localStorage.getItem('userId')
-
+const NavBar = ({ userId }) => {
   return ( 
   <nav className="navbar is-info" role="navigation" aria-label="main navigation">
     <div className="navbar-brand">
@@ -32,10 +30,10 @@ const NavBar = () => {
         </Link>
 
         <div className="navbar-dropdown">
-          <Link to={`/user/${currentUserId}/tickets?status=open`} className="navbar-item">
+          <Link to={`/user/${userId}/tickets?status=open`} className="navbar-item">
             My Open Tickets
           </Link>
-          <Link to={`/user/${currentUserId}/tickets?group=watched`} className="navbar-item">
+          <Link to={`/user/${userId}/tickets?group=watched`} className="navbar-item">
             Watched Tickets
           </Link>
           <Link to="/tickets?assignedTo=unassigned" className="navbar-item">

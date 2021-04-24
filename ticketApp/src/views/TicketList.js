@@ -2,12 +2,19 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import useQueryParams from "../hooks/useQueryParams";
 import TicketItemList from "../components/tickets/TicketItemList";
+import AuthContext from "../components/context/AuthContext";
+import { useContext } from "react";
 
 const TicketList = () => {
+    const { token } = useContext(AuthContext);
     let { teamId, userId } = useParams();
     let filters = useQueryParams();
     const { isLoading, error, data } = useQuery('ticketList', () =>
-        fetch(`http://localhost:3001/user/${userId}/tickets`).then(res => {
+        fetch(`http://localhost:3001/user/${userId}/tickets`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(res => {
             return res.json()
         })
     )

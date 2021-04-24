@@ -19,7 +19,7 @@ const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
     return (
     <Router>
         <main>
-            <NavBar />
+            <NavBar userId={currentUserId} />
             <Switch>
                 <Route exact path="/" component={Dashboard} />
                 <Route path="/team/:teamId" component={TeamDetails} />

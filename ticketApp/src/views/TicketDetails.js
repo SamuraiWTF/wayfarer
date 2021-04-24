@@ -1,11 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from "react-query";
+import AuthContext from "../components/context/AuthContext";
+import { useContext } from "react";
 
 const TicketDetails = () => {
-    
+    const { token } = useContext(AuthContext);
     let { ticketId } = useParams();
     const { isLoading, error, data } = useQuery(`ticket-${ticketId}`, () =>
-        fetch(`http://localhost:3001/ticket/${ticketId}/`).then(res => {
+        fetch(`http://localhost:3001/ticket/${ticketId}/`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
         })
     )
