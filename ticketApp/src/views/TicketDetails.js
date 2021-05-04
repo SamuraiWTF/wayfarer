@@ -4,7 +4,7 @@ import AuthContext from "../components/context/AuthContext";
 import { useContext } from "react";
 
 const TicketDetails = () => {
-    const { token } = useContext(AuthContext);
+    const { token, clearAuth } = useContext(AuthContext);
     let { ticketId } = useParams();
     const { isLoading, error, data } = useQuery(`ticket-${ticketId}`, () =>
         fetch(`http://localhost:3001/ticket/${ticketId}/`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
@@ -14,7 +14,13 @@ const TicketDetails = () => {
 
     if (isLoading) { return 'Loading...' } 
     if (error) { return 'An error has occurred: ' + error.message } else 
-    if (data.error) { return data.error } 
+    if (data.error) {
+        if(data.reauth) {
+            console.log('Session timed out, clearing auth');
+            clearAuth();
+        } 
+        return data.error;
+    } 
 
     const ticket = data.data;
 

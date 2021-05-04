@@ -38,13 +38,13 @@ app.get('/user/:id', iam.validateTokenSig, userController.getUser)
 
 app.get('/user/:userId/tickets', ticketController.getTicketsByUser)
 
-app.get('/user/:userId/teams', teamController.getTeamsByUser)
+app.get('/user/:userId/teams', iam.validateTokenSig, teamController.getTeamsByUser)
 
-app.get('/team/:teamId', teamController.getTeamById)
+app.get('/team/:teamId', iam.validateTokenSig, teamController.getTeamById)
 
 app.get('/team/:teamId/tickets', ticketController.getTicketsByTeam)
 
-app.get('/ticket/:ticketId', ticketController.getTicketDetailsById)
+app.get('/ticket/:ticketId', iam.validateTokenSig, ticketController.getTicketDetailsById)
 
 app.listen(3001)
 

@@ -12,7 +12,7 @@ exports.validateTokenSig = function(req, res, next) {
             }
         }
     }
-    res.status(401).json({ status: 401, error: 'Invalid token signature.' })
+    res.status(401).json({ status: 401, error: 'Invalid token signature.', reauth: true })
 }
 
 exports.tokenClaims = function(req, res, next) {

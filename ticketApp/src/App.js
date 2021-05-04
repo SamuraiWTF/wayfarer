@@ -10,14 +10,18 @@ function App() {
   const [currentUserId, setCurrentUserId] = useState(localStorage.getItem('currentUserId'));
   const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
   const authStatusChanged = () => {
+    console.log('auth status changed')
     setCurrentUserId(localStorage.getItem('currentUserId'));
     setAuthToken(localStorage.getItem('authToken'));
   }
-  const clearAuth = () => {
+  let clearAuth = () => {
     localStorage.removeItem('currentUserId');
     localStorage.removeItem('authToken');
     authStatusChanged();
   }
+
+  clearAuth = clearAuth.bind(this);
+
   const defaultAuthContext = {
     token: authToken,
     userId: currentUserId,

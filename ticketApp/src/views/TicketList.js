@@ -6,8 +6,11 @@ import AuthContext from "../components/context/AuthContext";
 import { useContext } from "react";
 
 const TicketList = () => {
-    const { token } = useContext(AuthContext);
+    const { token, userId : currentUserID } = useContext(AuthContext);
     let { teamId, userId } = useParams();
+    if(userId === undefined) {
+        userId = currentUserID;
+    }
     let filters = useQueryParams();
     const { isLoading, error, data } = useQuery('ticketList', () =>
         fetch(`http://localhost:3001/user/${userId}/tickets`, {

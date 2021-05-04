@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import AuthContext from "../components/context/AuthContext";
 
-const Login = ({ authStatusChanged }) => {
+const Login = () => {
+    const { statusChanged } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    
+
     const handleLogin = () => {
         fetch('http://localhost:3001/authenticate', {
             method: 'post',
@@ -12,49 +14,52 @@ const Login = ({ authStatusChanged }) => {
         }).then((response) => {
             return response.json();
         }).then((res) => {
-            if(res.error) {
+            if (res.error) {
                 alert(res.error);
             } else {
-              localStorage.setItem('currentUserId', res.data.userId);
-              localStorage.setItem('authToken', res.data.token);
-              authStatusChanged();
+                localStorage.setItem('currentUserId', res.data.userId);
+                localStorage.setItem('authToken', res.data.token);
+                statusChanged();
             }
         })
     }
 
-    return (
-        <section className="hero is-primary">
-            <div className="hero-body">
-                <div className="container has-text-center m-6">
-                    <div className="section m-6">
-                    <div className="card m-6 p-6">
-                    <div className="card-image">
-                        <figure className="image is-4by3">
-                            <img src="/wayfarer_tf_icon.svg" alt="wayfarer training federation logo" />
-                        </figure>
-                    </div>
-                    <div className="card-content">
-                        <div className="content">
-                            {/** login form */}
-                            <div className="field">
-                                <p className="control has-icons-left has-icons-right">
-                                    <input className="input" type="username" placeholder="Username" value={username} onChange={ event => setUsername(event.target.value) } />
-                                </p>
-                                </div>
-                                <div className="field">
-                                <p className="control has-icons-left">
-                                    <input className="input" type="password" placeholder="Password" value={password} onChange={ event => setPassword(event.target.value) } />
-                                </p>
-                                </div>
-                            <button className="button is-primary" onClick={handleLogin}>Login</button>
-                        </div>
-                    </div>
+    return (<div className="modal is-active">
+        <div className="box has-background-primary">
+            <div className="container is-flex pb-6" style={{justifyContent:'center'}}>
+            <figure className="image is-128x128">
+                <img src="/wayfarer_tf_icon.svg" alt="wayfarer training federation logo" />
+            </figure>
+            </div>
+            {/** login form */}
+            <div className="field is-horizontal">
+                <div className="field-label is-large">
+                    <label className="label has-text-primary-light">Username</label>
                 </div>
+                <div className="field-body">
+                    <div className="field">
+                        <p className="control">
+                            <input className="input is-large" type="username" placeholder="user@wayfarertf.test" value={username} onChange={event => setUsername(event.target.value)} />
+                        </p>
                     </div>
                 </div>
             </div>
-        </section>
-    ) 
+            <div className="field is-horizontal">
+                <div className="field-label is-large">
+                    <label className="label has-text-primary-light">Password</label>
+                </div>
+                <div className="field-body">
+                    <div className="field">
+                        <p className="control">
+                            <input className="input is-large" type="password" placeholder="***********" value={password} onChange={event => setPassword(event.target.value)} />
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <button className="button is-link" onClick={handleLogin}>Login</button>
+        </div>
+    </div>
+    )
 }
 
 export default Login;

@@ -7,11 +7,6 @@ import TicketList from "./views/TicketList";
 import TeamList from "./views/TeamList";
 import UserDetails from "./views/UserDetails";
 import Login from "./views/Login";
-import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
-
-const clearAuth = () => {
-  localStorage.removeItem('authToken')
-}
 
 const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
   let authenticated = (currentUserId && authToken) ? true : false;
@@ -30,7 +25,7 @@ const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
                 <Route path="/user/:userId/tickets/team/:teamId/:filterGroup" component={TicketList} />
                 <Route path="/user/:userId/tickets/:filterGroup" component={TicketList} />
                 <Route path="/user/:userId/tickets" component={TicketList} />
-                <Route path="/user/:userId/teams" component={TeamList} />
+                <Route path="/user/:userId/teams" component={TeamList} exact={true} />
                 <Route path="/user/:userId" component={UserDetails} />
                 <Route path="/user" component={UserDetails} />
             </Switch>
