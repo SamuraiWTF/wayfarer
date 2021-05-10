@@ -3,10 +3,12 @@ import { useQuery } from "react-query";
 import AuthContext from "../components/context/AuthContext";
 import { useContext } from "react";
 
+import AssigneeSelect from "../components/tickets/AssigneeSelect";
+
 const TicketDetails = () => {
     const { token, clearAuth } = useContext(AuthContext);
     let { ticketId } = useParams();
-    const { isLoading, error, data } = useQuery(`ticket-${ticketId}`, () =>
+    const { isLoading, error, data } = useQuery(['ticket', ticketId], () =>
         fetch(`http://localhost:3001/ticket/${ticketId}/`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
         })
@@ -63,12 +65,7 @@ const TicketDetails = () => {
                         <div className="field">
                             <label className="label">assignee</label>
                             <div className="control">
-                                <div className="select is-loading">
-                                    <select disabled>
-                                        <option value="open">Captain Beard</option>
-                                        <option value="closed">closed</option>
-                                    </select>
-                                </div>
+                                <AssigneeSelect value={ticket.assigned_to} teamId={ticket.team_id} ticketId={ticket.id} />
                             </div>
                         </div>
                     </div>

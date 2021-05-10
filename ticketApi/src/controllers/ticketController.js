@@ -22,6 +22,13 @@ const ticketController = {
         }).catch((err) => {
             sendErrorResponse(res, err)
         })
+    },
+    updateAssignee: (req, res) => {
+        tickets.updateTicketAssignee(req.params.ticketId, req.body.assigneeId).then((changedRowCount) => {
+            sendSuccessResponse(res, { changedRows: changedRowCount })
+        }).catch((err) => {
+            sendErrorResponse(res, err)
+        })
     }
 }
 

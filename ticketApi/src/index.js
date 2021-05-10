@@ -46,6 +46,8 @@ app.get('/team/:teamId/tickets', ticketController.getTicketsByTeam)
 
 app.get('/ticket/:ticketId', iam.validateTokenSig, ticketController.getTicketDetailsById)
 
+app.post('/ticket/:ticketId/assign', iam.validateTokenSig, ticketController.updateAssignee)
+
 app.listen(3001)
 
 console.log('listening')

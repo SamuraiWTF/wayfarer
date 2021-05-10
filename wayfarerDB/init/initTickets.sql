@@ -154,7 +154,7 @@ INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, 
     'Virus scanner blocking notepad++',
     'The virus scanner keeps flagging my notepad++ app whenever I open it. I''m also having issues accessing my Documents folder.',
     @help_desk_team_id,
-    1,
+    2,
     'open',
     3,
     CURRENT_TIMESTAMP
