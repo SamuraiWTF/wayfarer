@@ -8,14 +8,14 @@ const AssigneeSelect = ({ teamId, ticketId, value, placeholderText }) => {
     const { isLoading, error, data } = useQuery(['teamMembers', teamId], () => 
         fetch(`http://localhost:3001/team/${teamId}`, { headers: { 'Authorization' : `Bearer ${token}`}}).then(res => { return res.json() })
     )
-    const doUpdate = useMutation(newAssignee => fetch(`http://localhost:3001/ticket/${ticketId}/assign`, {
-        method: 'POST',
+    const doUpdate = useMutation(newAssignee => fetch(`http://localhost:3001/ticket/${ticketId}`, {
+        method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            assigneeId: newAssignee
+            assigned_to: newAssignee
         })
     }))
 
