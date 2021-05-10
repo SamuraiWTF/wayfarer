@@ -29,6 +29,13 @@ const ticketController = {
         }).catch((err) => {
             sendErrorResponse(res, err)
         })
+    },
+    partialUpdate: (req, res) => {
+        tickets.partialUpdateTicket(req.params.ticketId, req.body).then((changedRowCount) => {
+            sendSuccessResponse(res, { changedRows: changedRowCount })
+        }).catch((err) => {
+            sendErrorResponse(res, err)
+        })
     }
 }
 

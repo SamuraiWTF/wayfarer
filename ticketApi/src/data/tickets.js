@@ -57,7 +57,26 @@ const tickets = {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 }
-                console.log('resultz ', results)
+                resolve(results.changedRows)
+            })
+        })
+    },
+    partialUpdateTicket: (ticketId, fields) => {
+        return new Promise((resolve, reject) => {
+            let fieldset = Object.keys(fields).filter((key) => 
+            // This filter can be used to use an allowlist to strip fields that don't exist or should never be part of a partial update.
+            true).reduce((set, key) => {
+                set.keys.push(key);
+                set.vals.push(fields[key]);
+                return set;
+            }, { keys: [], vals: []  });
+            let setters = fieldset.keys.map(key =>  
+                `${key} = ?`
+             ).join(', ');
+            connectionPool.query(`UPDATE tickets SET ${setters} WHERE BIN_TO_UUID(tickets.id, 1) = ?`, [...fieldset.vals, ticketId], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
                 resolve(results.changedRows)
             })
         })

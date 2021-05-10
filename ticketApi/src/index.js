@@ -48,6 +48,8 @@ app.get('/ticket/:ticketId', iam.validateTokenSig, ticketController.getTicketDet
 
 app.post('/ticket/:ticketId/assign', iam.validateTokenSig, ticketController.updateAssignee)
 
+app.patch('/ticket/:ticketId', iam.validateTokenSig, ticketController.partialUpdate)
+
 app.listen(3001)
 
 console.log('listening')
