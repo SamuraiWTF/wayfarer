@@ -4,10 +4,12 @@ import AuthContext from "../components/context/AuthContext";
 import { useContext, useState } from "react";
 import MessageBox from "../components/shared/MessageBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import MDEditor from "../components/tickets/MdEditor";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import AssigneeSelect from "../components/tickets/AssigneeSelect";
 import StatusSelect from '../components/tickets/StatusSelect';
+import { MdeFontAwesomeIcon } from 'react-mde';
 
 const TicketDetails = () => {
     const { token, clearAuth } = useContext(AuthContext);
@@ -86,7 +88,12 @@ const TicketDetails = () => {
                     }
                     <div className="section has-text-left-desktop">
                         <h2 className="subtitle">description</h2>
-                        <div className="container has-text-left-desktop" dangerouslySetInnerHTML={{ __html: ticket.body }}></div>
+                        <div className="container has-text-left-desktop">
+                        { 
+                            // dangerouslySetInnerHTML={{ __html: ticket.body }}> 
+                        }
+                         <MDEditor></MDEditor>
+                        </div>
                     </div>
                     <div className="section has-text-left-desktop">
                         <h2 className="subtitle">comments</h2>
