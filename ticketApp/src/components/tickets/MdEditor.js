@@ -11,8 +11,8 @@ const converter = new Showdown.Converter({
     tasklists: true
 });
 
-const MdEditor = () => {
-  const [value, setValue] = useState("**Hello world!!!**");
+const MdEditor = ({ defaultValue, onSave, onCancel }) => {
+  const [value, setValue] = useState(defaultValue);
   const [selectedTab, setSelectedTab] = useState("write");
   return (
     <div className="container">
@@ -25,6 +25,8 @@ const MdEditor = () => {
           Promise.resolve(converter.makeHtml(markdown))
         }
       />
+      <button className="button is-link" onClick={() => {onSave(value)}}>Save</button>
+      <button className="button is-primary" onClick={onCancel}>Cancel</button>
     </div>
   );
 }

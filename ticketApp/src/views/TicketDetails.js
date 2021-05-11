@@ -6,16 +6,17 @@ import MessageBox from "../components/shared/MessageBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MDEditor from "../components/tickets/MdEditor";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-
+import * as Showdown from "showdown";
 import AssigneeSelect from "../components/tickets/AssigneeSelect";
 import StatusSelect from '../components/tickets/StatusSelect';
-import { MdeFontAwesomeIcon } from 'react-mde';
+
 
 const TicketDetails = () => {
     const { token, clearAuth } = useContext(AuthContext);
     const queryClient = useQueryClient();
     const [editingName, setEditingName] = useState(false);
     const [editingDesc, setEditingDesc] = useState(false);
+
     let { ticketId } = useParams();
     const { isLoading, error, data } = useQuery(['ticket', ticketId], () =>
         fetch(`http://localhost:3001/ticket/${ticketId}/`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
@@ -53,7 +54,17 @@ const TicketDetails = () => {
         doUpdateTicketFields.mutate({ title: value })
         setEditingName(false)
     }
+    const updateDesc = (newVal) => {
+        doUpdateTicketFields.mutate({ body: newVal })
+        setEditingDesc(false)
+    }
   
+    const mdConverter = new Showdown.Converter({
+        tables: true,
+        simplifiedAutoLink: true,
+        strikethrough: true,
+        tasklists: true
+    });
 
     return (
         <div className="container">
@@ -77,7 +88,7 @@ const TicketDetails = () => {
                                 </div>
                             </h1>
                         :
-                        <h1 className="title">{ ticket.title } <FontAwesomeIcon icon={faEdit} onClick={(e) => {setEditingName(true)}} /></h1>
+                        <h1 className="title">{ ticket.title } <FontAwesomeIcon className="is-clickable" icon={faEdit} onClick={(e) => {setEditingName(true)}} /></h1>
                     }
                 </div>
             </div>
@@ -87,12 +98,14 @@ const TicketDetails = () => {
                         <MessageBox onDismiss={() => { console.log('dismiss not implemented' )}} {...message} />
                     }
                     <div className="section has-text-left-desktop">
-                        <h2 className="subtitle">description</h2>
+                        <h2 className="subtitle">description { editingDesc ? '' : <FontAwesomeIcon className="is-clickable" icon={faEdit} onClick={() => { setEditingDesc(true) }} />}</h2>
                         <div className="container has-text-left-desktop">
                         { 
-                            // dangerouslySetInnerHTML={{ __html: ticket.body }}> 
+                            editingDesc ? 
+                                <MDEditor defaultValue={ticket.body} onSave={updateDesc} onCancel={() => { setEditingDesc(false) }} />
+                            :   <div dangerouslySetInnerHTML={{ __html: mdConverter.makeHtml(ticket.body) }}></div> 
                         }
-                         <MDEditor></MDEditor>
+                         
                         </div>
                     </div>
                     <div className="section has-text-left-desktop">
