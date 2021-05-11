@@ -46,9 +46,9 @@ const NavBar = ({ userId }) => {
     <div className="navbar-end">
       <div className="navbar-item">
         <div className="buttons">
-          <a className="button is-link">
+          { /*<a className="button is-link">
             Log in
-          </a>
+  </a> */}
         </div>
       </div>
     </div>

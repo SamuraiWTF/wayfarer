@@ -10,7 +10,6 @@ function App() {
   const [currentUserId, setCurrentUserId] = useState(localStorage.getItem('currentUserId'));
   const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
   const authStatusChanged = () => {
-    console.log('auth status changed')
     setCurrentUserId(localStorage.getItem('currentUserId'));
     setAuthToken(localStorage.getItem('authToken'));
   }
