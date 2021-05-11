@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import AuthContext from "../components/context/AuthContext";
 import { useContext } from "react";
 import { useQuery } from 'react-query';
@@ -23,7 +23,7 @@ const TeamList = () => {
     const teams = data?.data;
 
     return (<>
-       <div><table className="table">
+       <div className="container"><table className="table">
            <thead>
                <tr>
                    <th>Team</th>
@@ -33,15 +33,17 @@ const TeamList = () => {
                    <th>Your Role</th>
                </tr>
            </thead>
+           <tbody>
         { teams.map(team => 
             <tr>
-            <td>{team.name}</td>
+            <td><Link to={`/team/${team.id}`}>{team.name}</Link></td>
             <td>0</td>
             <td>0</td>
             <td>0</td>
             <td>{team.role}</td>
             </tr>
         ) }  
+        </tbody>
         </table></div>
     </>)
 }
