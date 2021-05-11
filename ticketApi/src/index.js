@@ -21,14 +21,6 @@ app.use(express.json())
 app.options('*', cors(corsOptions))
 
 app.get('/', (req, res) => {
-    // This is probably leaking. 
-    /*connection.connect(function(err) {
-        if(err) {
-            dbStatus = err
-            return;
-        }
-        dbStatus = 'connected as id ' + connection.threadId
-    })*/
   res.status(200).json({ message: 'hello world'})
 })
 
@@ -42,7 +34,7 @@ app.get('/user/:userId/teams', iam.validateTokenSig, teamController.getTeamsByUs
 
 app.get('/team/:teamId', iam.validateTokenSig, teamController.getTeamById)
 
-app.get('/team/:teamId/tickets', ticketController.getTicketsByTeam)
+app.get('/team/:teamId/tickets', iam.validateTokenSig, ticketController.getTicketsByTeam)
 
 app.get('/ticket/:ticketId', iam.validateTokenSig, ticketController.getTicketDetailsById)
 
