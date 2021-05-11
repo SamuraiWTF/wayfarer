@@ -64,7 +64,16 @@ const teams = {
     },
     getTeamsByUser: (userId) => {
         return new Promise((resolve, reject) => {
-            connectionPool.query('SELECT t.id, t.name, m.role FROM team_memberships m RIGHT JOIN teams t ON m.team_id = t.id WHERE m.user_id = ?', [userId], (error, results, fields) => {
+            connectionPool.query(`SELECT t.id, t.name, m.role, 
+            COUNT(tio.id) as open_tickets, 
+            COUNT(tic.id) as closed_tickets,
+            COUNT(tiu.id) as user_tickets 
+            FROM team_memberships m 
+            RIGHT JOIN teams t ON m.team_id = t.id 
+            LEFT JOIN tickets tio ON (tio.team_id = t.id AND tio.status = \'open\') 
+            LEFT JOIN tickets tic ON (tic.team_id = t.id AND tic.status = \'closed\') 
+            LEFT JOIN tickets tiu ON (tiu.team_id = t.id AND tiu.assigned_to = ? AND tiu.status = \'open\')
+            WHERE m.user_id = ? GROUP BY t.id`, [userId, userId], (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 }

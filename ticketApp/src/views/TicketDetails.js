@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MDEditor from "../components/tickets/MdEditor";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import * as Showdown from "showdown";
+import TeamLabel from "../components/shared/TeamLabel";
 import AssigneeSelect from "../components/tickets/AssigneeSelect";
 import StatusSelect from '../components/tickets/StatusSelect';
 
@@ -117,7 +118,7 @@ const TicketDetails = () => {
                         <div className="field">
                             <label className="label">team</label>
                             <div className="control">
-                                <span>Help Desk</span>
+                                <TeamLabel teamId={ticket.team_id} />
                             </div>
                         </div>
                         <div className="field">

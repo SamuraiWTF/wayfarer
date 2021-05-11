@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const NavBar = ({ userId }) => {
   return ( 
-  <nav className="navbar is-info" role="navigation" aria-label="main navigation">
+  <nav className="navbar is-info" role="navigation" style={{zIndex: 5000}} aria-label="main navigation">
     <div className="navbar-brand">
         <a className="navbar-item is-tall" href="/">
             <img src="/wayfarer_tf_logo.svg" className="is-tall" alt="logo" width="112" height="28" />

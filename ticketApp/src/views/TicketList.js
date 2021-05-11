@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import useQueryParams from "../hooks/useQueryParams";
 import TicketItemList from "../components/tickets/TicketItemList";
 import AuthContext from "../components/context/AuthContext";
+import FilterBar from "../components/tickets/FilterBar";
 import { useContext } from "react";
 
 const TicketList = () => {
@@ -35,7 +36,7 @@ const TicketList = () => {
         <h1 className="title">
           Tickets for { teamId ? 'team ' + teamId : 'all teams' } for { userId ? 'user ' + userId : 'all users' }
         </h1>
-        Filters
+        <FilterBar />
         <ul>
            { filters.get('group') ? <li>Group: {filters.get('group')}</li> : <></> }             
         </ul>
