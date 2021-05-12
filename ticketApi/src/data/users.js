@@ -14,12 +14,16 @@ const users = {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 } else {
-                    if(results.length === 1 && results[0].password === authUtils.hashWithSalt(password, results[0].salt).hash) {
-                        let token = authUtils.createAuthToken(results[0])
-                        let userId = results[0].id;
-                        return resolve({ token: token, userId, userId })
+                    if(results.length === 1) {
+                        if(results[0].password === authUtils.hashWithSalt(password, results[0].salt).hash) {
+                            let token = authUtils.createAuthToken(results[0])
+                            let userId = results[0].id;
+                            return resolve({ token: token, userId, userId })
+                        }
+                        // invalid password
+                        return reject({ type: errorCodes.BADPASS, details: 'Invalid credentials' })
                     }
-                    // invalid user or password
+                    // invalid user
                     reject({ type: errorCodes.NOAUTH, details: 'Invalid credentials.' })
                 }
             })

@@ -80,6 +80,39 @@ const tickets = {
                 resolve(results.changedRows)
             })
         })
+    },
+    getFilterOptions: (userId) => {
+        return new Promise((resolve, reject) => {
+            Promise.all([
+                new Promise((resolveTeams, rejectTeams) => {
+                    connectionPool.query(`SELECT t.id, t.name
+                        FROM team_memberships m 
+                        RIGHT JOIN teams t ON m.team_id = t.id 
+                        WHERE m.user_id = ? GROUP BY t.id`, [userId], (error, results) => {
+                            if(error) {
+                                return rejectTeams({ type: error.DBERR, details: error })
+                            }
+                            resolveTeams(results)
+                        })
+                }),
+                new Promise((resolveUsers, rejectUsers) => {
+                    connectionPool.query(`SELECT DISTINCT u.id, u.name
+                        FROM team_memberships m
+                        RIGHT JOIN users u ON m.user_id = u.id
+                        WHERE m.team_id IN (SELECT tm.team_id FROM team_memberships tm WHERE tm.user_id = ?)
+                    `, [userId], (error, results) => {
+                        if(error) {
+                            return rejectUsers({ type: error.DBERR, details: error })
+                        }
+                        resolveUsers(results)
+                    })
+                })
+            ]).then(([teams, users]) => {
+                resolve({ users: users, teams: teams })
+            }).catch((err) => {
+                reject(err)
+            })
+        })
     }
 }
 

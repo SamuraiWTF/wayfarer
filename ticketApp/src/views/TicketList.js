@@ -4,6 +4,7 @@ import useQueryParams from "../hooks/useQueryParams";
 import TicketItemList from "../components/tickets/TicketItemList";
 import AuthContext from "../components/context/AuthContext";
 import FilterBar from "../components/tickets/FilterBar";
+import UserLabel from "../components/shared/UserLabel";
 import { useContext } from "react";
 
 const TicketList = () => {
@@ -34,7 +35,7 @@ const TicketList = () => {
     let ticketData = data.data;
     return <div className="container">
         <h1 className="title">
-          Tickets for { teamId ? 'team ' + teamId : 'all teams' } for { userId ? 'user ' + userId : 'all users' }
+          Tickets for { teamId ? 'team ' + teamId : 'all teams' } for { userId ? <UserLabel userId={userId} /> : 'all users' }
         </h1>
         <FilterBar />
         <ul>

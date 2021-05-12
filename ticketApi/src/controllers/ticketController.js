@@ -36,6 +36,13 @@ const ticketController = {
         }).catch((err) => {
             sendErrorResponse(res, err)
         })
+    },
+    getFilteringOptions: (req, res) => {
+        tickets.getFilterOptions(req.claims.userId).then((options) => {
+            sendSuccessResponse(res, options)
+        }).catch((err) => {
+            sendErrorResponse(res, err)
+        })
     }
 }
 

@@ -7,6 +7,8 @@ const userController = require('./controllers/userController')
 const ticketController = require('./controllers/ticketController')
 const teamController = require('./controllers/teamController')
 
+const cookieParser = require('cookie-parser')
+
 const iam = require('./middleware/iam')
 
 const corsOptions = {
@@ -24,7 +26,7 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'hello world'})
 })
 
-app.post('/authenticate', userController.authenticate)
+app.post('/authenticate', cookieParser('Use a strong secret'), userController.authenticate)
 
 app.get('/user/:id', iam.validateTokenSig, userController.getUser)
 
@@ -37,6 +39,8 @@ app.get('/team/:teamId', iam.validateTokenSig, teamController.getTeamById)
 app.get('/team/:teamId/tickets', iam.validateTokenSig, ticketController.getTicketsByTeam)
 
 app.get('/ticket/:ticketId', iam.validateTokenSig, ticketController.getTicketDetailsById)
+
+app.get('/options/filtering', iam.validateTokenSig, ticketController.getFilteringOptions)
 
 app.post('/ticket/:ticketId/assign', iam.validateTokenSig, ticketController.updateAssignee)
 

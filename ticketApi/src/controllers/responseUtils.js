@@ -1,5 +1,3 @@
-const { convertToHttp } = require('../data/errorCodes')
-
 exports.sendErrorResponse = function(res, err) {
     console.log('request error: ', err)
     let { status, message } = convertToHttp(err)
