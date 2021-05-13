@@ -1,43 +1,46 @@
 const connectionPool = require('./mysqlConnectionPool')
 const { errorCodes } = require('./errorCodes');
-const { response } = require('express');
-
-let mockData = [
-    { id: 1, name: 'helpdesk', members: [
-        { userId: 1, role: 'owner' },
-        { userId: 3, role: 'member' },
-        { userId: 4, role: 'manager' }
-    ]},
-    {
-       id: 2, name: 'customer support', members: [
-           { userId: 2, role: 'owner' },
-           { userId: 3, role: 'member' }
-       ]
-    }
-]
-
-const getNextId = (() => { 
-    let seedId = mockData.length;
-    return () => {
-        seedId += 1;
-        return seedId;
-    }
-})();
 
 const teams = {
-    getTeamDetails: (teamId) => {
+    getTeamDetails: (teamId, requestorUserId) => {
+        requestorUserId = 1 //todo modify call so that this gets passed in
         return new Promise((resolve, reject) => {
                 Promise.all([
                     new Promise((resolve, reject) => {
                         // query the team itself
-                        connectionPool.query('SELECT t.* FROM teams t WHERE t.id = ?', [teamId], (error, results, fields) => {
+                        connectionPool.query(`SELECT t.id, t.name, 
+                                count(tixo.id) as 'stats_open', 
+                                count(tixc.id) as 'stats_closed',
+                                count(tixod.id) as 'stats_overdue',
+                                count(tixu.id) as 'stats_unassigned',
+                                m.role
+                            FROM teams t 
+                            LEFT OUTER JOIN tickets tixo ON t.id = tixo.team_id AND tixo.status = 'open'
+                            LEFT OUTER JOIN tickets tixc ON t.id = tixc.team_id AND tixc.status = 'closed'
+                            LEFT OUTER JOIN tickets tixod ON t.id = tixod.team_id AND CURDATE() > tixod.due_date
+                            LEFT OUTER JOIN tickets tixu ON t.id = tixu.team_id AND (tixu.assigned_to IS NULL OR tixu.assigned_to = -1) 
+                            LEFT OUTER JOIN team_memberships m ON t.id = m.team_id AND m.user_id = ? 
+                            WHERE t.id = ? 
+                            GROUP BY t.id`, [requestorUserId, teamId], (error, results, fields) => {
                             if(error) {
+                                console.log('error - ', error)
                                 reject({ type: errorCodes.DBERR, details: error })
                             } else {
                                 if(results.length == 0 ) {
                                     reject({ type: errorCodes.NOREC, details: 'No team found.' })
                                 } else {
-                                    resolve(results)
+                                    let details = results[0]
+                                    resolve({
+                                        id: details.id,
+                                        name: details.name,
+                                        role: details.role,
+                                        stats: {
+                                            open: details.stats_open,
+                                            closed: details.stats_closed,
+                                            unassigned: details.stats_unassigned,
+                                            overdue: details.stats_overdue
+                                        }
+                                    })
                                 }
                             }
                         })
@@ -54,10 +57,11 @@ const teams = {
                     })
                 ]).then(([team, members]) => {
                     // construct the object
-                    team[0].members = members
-                    resolve(team[0])
+                    team.members = members
+                    resolve(team)
                 }).catch((error) => {
                     // something failed, bubble the error.
+                    console.log('error - ', error)
                     reject(error)
                 })
         })
@@ -83,28 +87,28 @@ const teams = {
     },
     createTeam: (team) => {
       // TODO: validation - must have name and owner member
-      team.id = getNextId();
+      /*team.id = getNextId();
       mockData.push(team);
-      return team;
+      return team;*/
     },
     updateTeam: (team) => {
-      let index = mockData.findIndex(teamRec => teamRec.id === team.id)
+      /*let index = mockData.findIndex(teamRec => teamRec.id === team.id)
       if(index === -1) {
           return undefined;
       } else {
           // TODO: validation - must have name and owner member
           mockData[index] = team;
           return team;
-      }
+      }*/
     },
       deleteTeam: (teamId) => {
-        let index = mockData.findIndex(teamRec => teamRec.id === teamId)
+        /*let index = mockData.findIndex(teamRec => teamRec.id === teamId)
         if(index === -1) {
             return false;
         } else {
             mockData.splice(index, 1)
             return true;
-        }
+        }*/
     }
 }
 
