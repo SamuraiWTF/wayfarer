@@ -7,7 +7,7 @@ const TeamMemberList = ({ data: members, onAction }) => {
     })()
 
     return <ul style={{listStyle: 'none'}}>
-        { members.sort(sorter).map(member => <li><TeamMemberCard data={member} editable={true} removable={true} onAction={onAction} /></li>) }
+        { members.sort(sorter).map(member => <li key={member.user_id}><TeamMemberCard data={member} editable={true} removable={true} onAction={onAction} /></li>) }
     </ul>
 }
 
