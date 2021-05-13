@@ -49,6 +49,10 @@ const TeamDetails = () => {
         alert('clicked stats: ' + type)
     }
 
+    const handleMemberAction = (action, member) => {
+        alert(`Doing ${action} on ${member.name}`)
+    }
+
     return (
         <div className="container mt-4">
             <h1 className="title">Team: <TeamLabel teamId={teamId} /></h1>
@@ -62,7 +66,7 @@ const TeamDetails = () => {
                     </div>
                     <div className="column">
                         <h2 className="subtitle">Members</h2>
-                        <TeamMemberList data={mockData.members} />
+                        <TeamMemberList data={mockData.members} onAction={handleMemberAction} />
                     </div>
                 </div>
             </div>
