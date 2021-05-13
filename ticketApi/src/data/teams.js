@@ -47,7 +47,12 @@ const teams = {
                     }),
                     new Promise((resolve, reject) => {
                         // query the members
-                        connectionPool.query('SELECT u.id as user_id, u.name, m.role FROM team_memberships m RIGHT JOIN users u ON m.user_id = u.id WHERE m.team_id = ? ORDER BY m.role ASC', [teamId], (error, results, fields) => {
+                        connectionPool.query(`SELECT u.id as user_id, 
+                                u.name, m.role, COUNT(tix.id) AS 'open_tickets' 
+                            FROM team_memberships m 
+                            RIGHT JOIN users u ON m.user_id = u.id 
+                            LEFT OUTER JOIN tickets tix ON tix.assigned_to = u.id AND tix.status = 'open'
+                            WHERE m.team_id = ? GROUP BY u.id ORDER BY m.role ASC`, [teamId], (error, results, fields) => {
                             if(error) {
                                 reject({ type: errorCodes.DBERR, details: error })
                             } else {
