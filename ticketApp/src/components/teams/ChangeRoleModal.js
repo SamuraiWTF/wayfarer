@@ -3,10 +3,12 @@ import { useState } from 'react';
 const ChangeRoleModal = ({ member, roles, team, onClickClose, onClickSave }) => {
     const [selectedRole, setSelectedRole] = useState(member.role)
 
-    return <div class="modal-card">
-        <header class="modal-card-head">
-        <p class="modal-card-title">Change User Role</p>
-        <button class="delete" aria-label="close"></button>
+    console.log(roles)
+
+    return <div className="modal-card">
+        <header className="modal-card-head">
+        <p className="modal-card-title">Change User Role</p>
+        <button className="delete" aria-label="close"  onClick={onClickClose}></button>
         </header>
         <section class="modal-card-body">
             Change user role for { member.name } within team { team }.
@@ -16,9 +18,9 @@ const ChangeRoleModal = ({ member, roles, team, onClickClose, onClickSave }) => 
                 </select>
             </div>
         </section>
-        <footer class="modal-card-foot">
-        <button class="button is-success" onClick={onClickSave}>Save changes</button>
-        <button class="button" onClick={onClickClose}>Cancel</button>
+        <footer className="modal-card-foot">
+        <button className="button is-success" onClick={onClickSave}>Save changes</button>
+        <button className="button" onClick={onClickClose}>Cancel</button>
         </footer>
     </div>
 }

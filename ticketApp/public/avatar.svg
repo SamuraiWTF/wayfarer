@@ -1,0 +1,91 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48">
+  <defs>
+    <style>
+      .cls-1, .cls-11 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #cecece;
+      }
+
+      .cls-3 {
+        fill: #1b0140;
+      }
+
+      .cls-4 {
+        clip-path: url(#clip-path);
+      }
+
+      .cls-5 {
+        fill: #050259;
+      }
+
+      .cls-6 {
+        fill: #5505a6;
+      }
+
+      .cls-7 {
+        fill: #b76206;
+      }
+
+      .cls-8 {
+        fill: #f28705;
+      }
+
+      .cls-9 {
+        fill: #0886a3;
+      }
+
+      .cls-10 {
+        fill: #0abeef;
+      }
+
+      .cls-11 {
+        stroke: #5505a6;
+        stroke-miterlimit: 10;
+        stroke-width: 1.33px;
+      }
+    </style>
+    <clipPath id="clip-path" transform="translate(0 0)">
+      <circle class="cls-1" cx="24" cy="24" r="23.06"/>
+    </clipPath>
+  </defs>
+  <g id="Layer_2_copy" data-name="Layer 2 copy">
+    <g>
+      <path class="cls-2" d="M24,47.5A23.5,23.5,0,1,1,47.5,24,23.52,23.52,0,0,1,24,47.5Z" transform="translate(0 0)"/>
+      <path class="cls-3" d="M24,1A23,23,0,1,1,1,24,23,23,0,0,1,24,1m0-1A24,24,0,1,0,48,24,24,24,0,0,0,24,0Z" transform="translate(0 0)"/>
+    </g>
+  </g>
+  <g class="cls-4">
+    <g>
+      <path class="cls-5" d="M29.27,26.9H18.82s-9.15-.68-9.15,7.91V47.33H38.42V34.81C38.42,26.22,29.27,26.9,29.27,26.9Z" transform="translate(0 0)"/>
+      <rect class="cls-6" x="18.36" y="32.51" width="11.36" height="11.07" rx="0.94"/>
+      <g>
+        <path class="cls-7" d="M33.61,27.37C31.24,27.37,32,22.9,32,22.9H16s.79,4.47-1.58,4.47c-.09-.66-1.09-.51-.85.13.18.47,2.06,5.08,3,7.42a2.18,2.18,0,0,0,2,1.35H29.42a2.18,2.18,0,0,0,2-1.35c1-2.34,2.84-7,3-7.42C34.7,26.86,33.7,26.71,33.61,27.37Z" transform="translate(0 0)"/>
+        <rect class="cls-6" x="19.67" y="4.86" width="8.72" height="4.43" rx="0.94"/>
+        <rect class="cls-6" x="11.8" y="12.8" width="5.15" height="9.11" rx="1.86"/>
+        <rect class="cls-6" x="31.15" y="12.8" width="5.15" height="9.11" rx="1.86"/>
+        <circle class="cls-8" cx="24.01" cy="16.88" r="10.49"/>
+        <ellipse class="cls-9" cx="24.01" cy="16.88" rx="7.6" ry="5.4"/>
+        <path class="cls-10" d="M30.13,20.09a4.47,4.47,0,0,0,1.48-3.21c0-3-3.4-5.39-7.6-5.39a9.34,9.34,0,0,0-5.41,1.6Z" transform="translate(0 0)"/>
+        <ellipse class="cls-11" cx="24.01" cy="16.88" rx="7.6" ry="5.4"/>
+      </g>
+      <circle class="cls-10" cx="26.74" cy="40.55" r="1.21"/>
+      <circle class="cls-10" cx="22.93" cy="38.72" r="1.06"/>
+      <path class="cls-3" d="M14.35,38.72h0a.77.77,0,0,0-.77.77v6.26h1.55V39.49A.77.77,0,0,0,14.35,38.72Z" transform="translate(0 0)"/>
+      <path class="cls-3" d="M33.74,38.72h0a.77.77,0,0,0-.78.77v6.26h1.55V39.49A.77.77,0,0,0,33.74,38.72Z" transform="translate(0 0)"/>
+      <rect class="cls-10" x="34.59" y="34.83" width="3.82" height="2.83"/>
+      <rect class="cls-10" x="9.66" y="34.83" width="3.82" height="2.83"/>
+      <path class="cls-6" d="M9.6,39.43h4a0,0,0,0,1,0,0v1.32a0,0,0,0,1,0,0h-4a.47.47,0,0,1-.47-.47V39.9A.47.47,0,0,1,9.6,39.43Z"/>
+      <path class="cls-6" d="M9.6,42.27h4a0,0,0,0,1,0,0v1.32a0,0,0,0,1,0,0h-4a.47.47,0,0,1-.47-.47v-.37A.47.47,0,0,1,9.6,42.27Z"/>
+      <path class="cls-6" d="M34.89,42.27h4a0,0,0,0,1,0,0v1.32a0,0,0,0,1,0,0h-4a.47.47,0,0,1-.47-.47v-.37a.47.47,0,0,1,.47-.47Z" transform="translate(73.29 85.85) rotate(180)"/>
+      <path class="cls-6" d="M34.89,39.43h4a0,0,0,0,1,0,0v1.32a0,0,0,0,1,0,0h-4a.47.47,0,0,1-.47-.47V39.9A.47.47,0,0,1,34.89,39.43Z" transform="translate(73.29 80.17) rotate(180)"/>
+      <circle class="cls-10" cx="18.61" cy="33.95" r="0.8"/>
+      <circle class="cls-10" cx="29.2" cy="33.95" r="0.8"/>
+    </g>
+  </g>
+  <g id="Layer_2_copy_2" data-name="Layer 2 copy 2">
+    <path class="cls-3" d="M24,1A23,23,0,1,1,1,24,23,23,0,0,1,24,1m0-1A24,24,0,1,0,48,24,24,24,0,0,0,24,0Z" transform="translate(0 0)"/>
+  </g>
+</svg>

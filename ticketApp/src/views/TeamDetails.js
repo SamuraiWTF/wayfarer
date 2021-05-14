@@ -53,6 +53,7 @@ const TeamDetails = () => {
         setActionTarget(member);
     }
 
+
     // Main Render
 
     return (
@@ -60,9 +61,8 @@ const TeamDetails = () => {
             <div className={`modal ${currentAction !== 'none' ? 'is-active' : ''}`}>
                 <div className="modal-background" onClick={() => { setCurrentAction('none') }}></div>
                 { currentAction === 'change_role' ? /* Todo modify filter so Admins get the full list */
-                    <ChangeRoleModal member={actionTarget} roles={roleList.slice(roleList.indexOf(data.data.role))} /> : ''
+                    <ChangeRoleModal member={actionTarget} roles={roleList.slice(roleList.indexOf(data.data.role))} onClickClose={() => { setCurrentAction('none') }} /> : ''
                 }
-                <button className="modal-close is-large" arial-label="close">Close</button>
             </div>
             <h1 className="title">Team: <TeamLabel teamId={teamId} /></h1>
             <div className="content">

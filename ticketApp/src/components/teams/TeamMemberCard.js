@@ -22,8 +22,8 @@ const TeamMemberCard = ({ data: person, editable, removable, onAction }) => {
             <div className={`card-content ${bgcolor}`}>
                 <div className="media">
                     <div className="media-left">
-                        <figure className="image is-48x48" style={{backgroundColor: 'white'}}>
-                            <img src="/avatar.png" alt="Placeholder avatar" style={{height:'48px'}} />
+                        <figure className="image is-48x48">
+                            <img src="/avatar.svg" alt="Placeholder avatar" style={{height:'48px'}} />
                         </figure>
                     </div>
                     <div className="media-content">
