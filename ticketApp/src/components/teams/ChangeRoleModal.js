@@ -14,7 +14,7 @@ const ChangeRoleModal = ({ member, roles, team, onClickClose, onClickSave }) => 
             Change user role for { member.name } within team { team }.
             <div className="select">
                 <select value={ selectedRole } onChange={(e) => { setSelectedRole(e.target.value) }}>
-                    { roles.map(role => <option value={role}>{role}</option>)}
+                    { roles.map(role => <option key={role} value={role}>{role}</option>)}
                 </select>
             </div>
         </section>

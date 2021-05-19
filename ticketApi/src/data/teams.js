@@ -3,7 +3,6 @@ const { errorCodes } = require('./errorCodes');
 
 const teams = {
     getTeamDetails: (teamId, requestorUserId) => {
-        requestorUserId = 1 //todo modify call so that this gets passed in
         return new Promise((resolve, reject) => {
                 Promise.all([
                     new Promise((resolve, reject) => {

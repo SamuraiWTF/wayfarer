@@ -55,7 +55,7 @@ const TeamDetails = () => {
 
 
     // Main Render
-
+    console.log('data.data ', data.data)
     return (
         <div className="container mt-4">
             <div className={`modal ${currentAction !== 'none' ? 'is-active' : ''}`}>
