@@ -1,13 +1,12 @@
 /* eslint-disable eqeqeq */
 import useQueryParams from "../../hooks/useQueryParams";
-import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query";
+import { QueryClient, useMutation, useQuery } from "react-query";
 import { useState } from "react";
 import AuthContext from "../context/AuthContext";
 import { useContext } from 'react';
 
 const FilterBar = ({ userId, defaultFilters, onChange }) => {
     const { token, clearAuth } = useContext(AuthContext);
-    const queryClient = useQueryClient();
     const selectedFilters = new URLSearchParams(window.location.search);
     const [filterStatus, setFilterStatus] = useState(selectedFilters.get('status') || '*')
     const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || '*')
@@ -52,7 +51,8 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
     const usersOptions = [{ id: -1, name: '*' }, ...users];
 
     const changeFilters = (key, value, setter) => {
-        if(value === -1 || value === '*') {
+        if (value === '*') value = -1;
+        if(value === -1) {
             selectedFilters.delete(key)
         } else {
             selectedFilters.set(key, value); 
@@ -61,6 +61,7 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
         let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + selectedFilters.toString();
         window.history.pushState({path: newurl}, '', newurl);
         onChange(selectedFilters);
+        console.log(filterAssignedTo);
     }
     
     return (
