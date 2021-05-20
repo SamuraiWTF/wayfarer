@@ -52,7 +52,7 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
     const usersOptions = [{ id: -1, name: '*' }, ...users];
 
     const changeFilters = (key, value, setter) => {
-        if(value === -1) {
+        if(value === -1 || value === '*') {
             selectedFilters.delete(key)
         } else {
             selectedFilters.set(key, value); 

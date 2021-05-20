@@ -17,7 +17,6 @@ const TicketList = () => {
 
     const [filters, setFilters] = useState(new URLSearchParams(window.location.search));
     const { isLoading, error, data } = useQuery(['ticketList', filters.toString()], () => {
-        console.log(filters);
         return fetch(`http://localhost:3001/user/${userId}/tickets?${filters.toString()}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
