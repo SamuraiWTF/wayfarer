@@ -61,7 +61,6 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
         let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + selectedFilters.toString();
         window.history.pushState({path: newurl}, '', newurl);
         onChange(selectedFilters);
-        console.log(filterAssignedTo);
     }
     
     return (
