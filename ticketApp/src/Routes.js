@@ -7,6 +7,7 @@ import TicketList from "./views/TicketList";
 import TeamList from "./views/TeamList";
 import UserDetails from "./views/UserDetails";
 import Login from "./views/Login";
+import CreateTicket from "./views/CreateTicket";
 
 const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
   let authenticated = (currentUserId && authToken) ? true : false;
@@ -19,6 +20,7 @@ const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
                 <Route exact path="/" component={Dashboard} />
                 <Route path="/team/:teamId" component={TeamDetails} />
                 <Route path="/teams" component={TeamList} />
+                <Route path="/ticket/new" component={CreateTicket} />
                 <Route path="/ticket/:ticketId" component={TicketDetails} />
                 <Route path="/team/:teamId/tickets" component={TicketList} />
                 <Route path="/tickets" component={TicketList} />

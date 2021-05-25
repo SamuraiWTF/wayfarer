@@ -5,7 +5,7 @@ const formatDate = (dateString) => {
 }
 
 const TicketItemList = ({ data, showTeam }) => {
-    let rows = data.map(row => { 
+    let rows = data.map(row => {
         return <tr key={row.id}>
             <td><Link to={`/ticket/${row.id}`}>{row.title}</Link></td>
             <td><Link to={`/user/${row.assigned_to}`}>

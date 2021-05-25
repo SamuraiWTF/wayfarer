@@ -30,6 +30,10 @@ const NavBar = ({ userId }) => {
         </Link>
 
         <div className="navbar-dropdown">
+          <Link to={`/ticket/new`} className="navbar-item">
+            New Ticket
+          </Link>
+          <hr className="navbar-divider"/>
           <Link to={`/user/${userId}/tickets?status=open`} className="navbar-item">
             My Open Tickets
           </Link>
@@ -41,6 +45,10 @@ const NavBar = ({ userId }) => {
           </Link>
         </div>
       </div>
+
+      <Link to="/ticket/new" className="navbar-item">
+        New Ticket
+      </Link>
     </div>
 
     <div className="navbar-end">

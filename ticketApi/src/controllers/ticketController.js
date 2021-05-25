@@ -3,7 +3,7 @@ const { sendErrorResponse, sendSuccessResponse } = require('./responseUtils')
 
 const ticketController = {
     getTicketsByUser: (req, res) => {
-        tickets.getTicketsByAssignedUser(req.params.userId).then((tickets) => {
+        tickets.getTicketsByAssignedUser(req.params.userId, req.query.user, req.query.team, req.query.status).then((tickets) => {
             sendSuccessResponse(res, tickets)
         }).catch((err) => {
             sendErrorResponse(res, err)
@@ -40,6 +40,13 @@ const ticketController = {
     getFilteringOptions: (req, res) => {
         tickets.getFilterOptions(req.claims.userId).then((options) => {
             sendSuccessResponse(res, options)
+        }).catch((err) => {
+            sendErrorResponse(res, err)
+        })
+    },
+    create: (req, res) => {
+        tickets.createTicket(req.body).then((changedRowCount) => {
+            sendSuccessResponse(res, { changedRows: changedRowCount })
         }).catch((err) => {
             sendErrorResponse(res, err)
         })
