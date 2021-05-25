@@ -1,13 +1,15 @@
 import React, { useState, useContext } from "react";
+import useApiOrigin from "../hooks/useApiOrigin";
 import AuthContext from "../components/context/AuthContext";
 
 const Login = () => {
     const { statusChanged } = useContext(AuthContext);
+    const apiOrigin = useApiOrigin();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-        fetch('http://localhost:3001/authenticate', {
+        fetch(`${apiOrigin}/authenticate`, {
             method: 'post',
             body: JSON.stringify({ 'username': username, 'password': password }),
             headers: { 'Content-Type': 'application/json' }
