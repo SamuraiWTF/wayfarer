@@ -74,6 +74,8 @@ const CreateTicket = () => {
         }).then((res) => {
             if (res.error) {
                 alert(res.error);
+            } else {
+                alert("Ticket successfully created.");
             }
         })
     }

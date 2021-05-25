@@ -1,6 +1,5 @@
 /* eslint-disable eqeqeq */
-import useQueryParams from "../../hooks/useQueryParams";
-import { QueryClient, useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { useState } from "react";
 import AuthContext from "../context/AuthContext";
 import { useContext } from 'react';

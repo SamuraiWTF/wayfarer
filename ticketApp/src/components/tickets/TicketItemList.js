@@ -4,7 +4,7 @@ const formatDate = (dateString) => {
     return Intl.DateTimeFormat(navigator.language, { weekday: 'short', month: 'long', day: 'numeric' }).format(new Date(dateString));
 }
 
-const TicketItemList = ({ data, showTeam, filter }) => {
+const TicketItemList = ({ data, showTeam }) => {
     let rows = data.map(row => {
         return <tr key={row.id}>
             <td><Link to={`/ticket/${row.id}`}>{row.title}</Link></td>

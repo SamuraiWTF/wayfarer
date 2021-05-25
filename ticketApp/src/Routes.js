@@ -20,10 +20,10 @@ const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
                 <Route exact path="/" component={Dashboard} />
                 <Route path="/team/:teamId" component={TeamDetails} />
                 <Route path="/teams" component={TeamList} />
+                <Route path="/ticket/new" component={CreateTicket} />
                 <Route path="/ticket/:ticketId" component={TicketDetails} />
                 <Route path="/team/:teamId/tickets" component={TicketList} />
                 <Route path="/tickets" component={TicketList} />
-                <Route path="/new" component={CreateTicket} />
                 <Route path="/user/:userId/tickets/team/:teamId/:filterGroup" component={TicketList} />
                 <Route path="/user/:userId/tickets/:filterGroup" component={TicketList} />
                 <Route path="/user/:userId/tickets" component={TicketList} />

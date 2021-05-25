@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
-import { QueryClient, useQuery, useQueryClient } from "react-query";
-import useQueryParams from "../hooks/useQueryParams";
+import { useQuery, useQueryClient } from "react-query";
 import TicketItemList from "../components/tickets/TicketItemList";
 import AuthContext from "../components/context/AuthContext";
 import FilterBar from "../components/tickets/FilterBar";
