@@ -72,12 +72,8 @@ app.post('/ticket/:ticketId/assign', iam.validateTokenSig, ticketController.upda
 
 app.patch('/ticket/:ticketId', iam.validateTokenSig, ticketController.partialUpdate)
 
-<<<<<<< HEAD
 app.post('/ticket/create', iam.validateTokenSig, ticketController.create)
 
-app.listen(3001)
-=======
 app.listen(appConfig.listenPort)
->>>>>>> Added env variables to API for selecting the port and parameterizing the CORS policy
 
 console.log(`listening on ${appConfig.listenPort}`)
