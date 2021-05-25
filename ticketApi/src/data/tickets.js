@@ -116,7 +116,23 @@ const tickets = {
                 reject(err)
             })
         })
-    }
+    },
+    createTicket: (fields) => {
+        return new Promise((resolve, reject) => {
+            let title = fields.title;
+            let body = fields.body;
+            let teamId = fields.teamId;
+            let assignedTo = fields.assignedTo;
+            let userId = fields.userId;
+            connectionPool.query(`INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, due_date) VALUES
+            (UUID_TO_BIN(UUID(), 1), '${title}', '${body}', ${teamId}, ${assignedTo}, 'open', ${userId}, CURRENT_TIMESTAMP)`, [title, body, teamId, assignedTo, userId], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results.changedRows)
+            })
+        })
+    },
 }
 
 module.exports = tickets;

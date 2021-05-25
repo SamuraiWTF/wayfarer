@@ -43,6 +43,13 @@ const ticketController = {
         }).catch((err) => {
             sendErrorResponse(res, err)
         })
+    },
+    create: (req, res) => {
+        tickets.createTicket(req.body).then((changedRowCount) => {
+            sendSuccessResponse(res, { changedRows: changedRowCount })
+        }).catch((err) => {
+            sendErrorResponse(res, err)
+        })
     }
 }
 

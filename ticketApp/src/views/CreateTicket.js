@@ -3,24 +3,15 @@ import { useQuery } from "react-query";
 import { useState } from "react";
 import AuthContext from "../components/context/AuthContext";
 import { useContext } from "react";
-import UserLabel from "../components/shared/UserLabel";
 import UserList from "../components/tickets/UserList";
 
-const CreateTicket = ({ userId, defaultFilters, onChange }) => {
-    function get(object, key) {
-        var result = object[key];
-        return (typeof result !== "undefined") ? result : null;
-    }
-    function set(object, key, value) {
-        object[key] = value;
-    }
-    function deleteKey(object, key) {
-        delete object[key];
-    }
-
-    const { token, clearAuth } = useContext(AuthContext);
-    const selectedFilters = {}
-    const [filterTeam, setFilterTeam] = useState(get(selectedFilters, 'team') || 'Select a team')
+const CreateTicket = () => {
+    const { token, userId: currentUser } = useContext(AuthContext);
+    let { userId } = useParams();
+    let targetId = userId ? userId : currentUser;
+    const selectedFilters = new URLSearchParams(window.location.search);
+    const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || 'Select a team');
+    const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('assigned_to') || -1);
     const { isLoading, error, data } = useQuery('filterOptions', () => 
         fetch(`http://localhost:3001/options/filtering`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
@@ -32,8 +23,15 @@ const CreateTicket = ({ userId, defaultFilters, onChange }) => {
         }
     )
 
-    if(!onChange) {
-        onChange = () => {}
+    const [btnActive, setBtnActive] = useState(false);
+    const onChange = () => {
+        if (selectedFilters.get('team') && selectedFilters.get('assigned_to')
+        && document.getElementById("ticketTitle").value
+        && document.getElementById("ticketBody").value) {
+            setBtnActive(true);
+        } else {
+            setBtnActive(false);
+        }
     }
 
     if (isLoading) return 'Loading...'
@@ -44,20 +42,40 @@ const CreateTicket = ({ userId, defaultFilters, onChange }) => {
 
     const { users, teams } = data.data;
     const teamsOptions = [{ id: -1, name: 'Select a team' } , ...teams];
-    const usersOptions = [{ id: -1, name: 'Select a user' }, ...users];
 
     const changeFilters = (key, value, setter) => {
         if(value === -1) {
-            deleteKey(selectedFilters, key);
+            selectedFilters.delete(key);
         } else {
-            set(selectedFilters, key, value);
+            selectedFilters.set(key, value);
+        }
+        if (key === 'team') {
+            selectedFilters.delete('assigned_to');
+            setFilterAssignedTo(-1);
         }
         setter(value);
+        let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + selectedFilters.toString();
+        window.history.pushState({path: newurl}, '', newurl);
         onChange(selectedFilters);
     }
 
     const submitTicket = () => {
-        console.log("submit");
+        fetch('http://localhost:3001/ticket/create', {
+            method: 'post',
+            body: JSON.stringify({ title: document.getElementById("ticketTitle").value,
+                body: document.getElementById("ticketBody").value,
+                teamId: filterTeam,
+                assignedTo: filterAssignedTo,
+                userId: targetId
+                 }),
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+        }).then((response) => {
+            return response.json();
+        }).then((res) => {
+            if (res.error) {
+                alert(res.error);
+            }
+        })
     }
 
     return (
@@ -70,13 +88,13 @@ const CreateTicket = ({ userId, defaultFilters, onChange }) => {
                             <div className="field">
                                 <label className="label">Title</label>
                                 <div className="control">
-                                    <input className="input" type="text" placeholder="Title"/>
+                                    <input className="input" id="ticketTitle" type="text" placeholder="Title" onChange={onChange}/>
                                 </div>
                             </div>
                             <div className="field">
                                 <label className="label">Message</label>
                                 <div className="control">
-                                    <textarea className="textarea" placeholder="Message body"/>
+                                    <textarea className="textarea" id="ticketBody" placeholder="Message body" onChange={onChange}/>
                                 </div>
                             </div>
                         </div>
@@ -107,10 +125,10 @@ const CreateTicket = ({ userId, defaultFilters, onChange }) => {
                                 </div>
                                 <div className="column">
                                     <div className="label">Assigned User:</div>
-                                    <UserList teamId={filterTeam}/>
+                                    <UserList teamId={filterTeam} assigneeValue={filterAssignedTo} setAssignee={setFilterAssignedTo} onChange={changeFilters}/>
                                 </div>
                             </div>
-                            <button className="button is-fullwidth mt-5" onClick={() => {submitTicket()}}>Submit Ticket</button>
+                            <button className="button is-fullwidth mt-5" id="submitBtn" onClick={submitTicket} disabled={!btnActive}>Submit Ticket</button>
                         </div>
                     </div>
                 </div>
