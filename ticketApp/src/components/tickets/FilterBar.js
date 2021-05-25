@@ -9,7 +9,8 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
     const selectedFilters = new URLSearchParams(window.location.search);
     const [filterStatus, setFilterStatus] = useState(selectedFilters.get('status') || '*')
     const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || '*')
-    const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('assigned_to') || '*')
+    const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('user') || '*')
+
     const { isLoading, error, data } = useQuery('filterOptions', () => 
         fetch(`http://localhost:3001/options/filtering`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
@@ -46,7 +47,7 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
     }
 
     const { users, teams } = data.data;
-    const teamsOptions = [{ id: -1, name: '*' } , ...teams];
+    const teamsOptions = [{ id: -1, name: '*' }, ...teams];
     const usersOptions = [{ id: -1, name: '*' }, ...users];
 
     const changeFilters = (key, value, setter) => {
