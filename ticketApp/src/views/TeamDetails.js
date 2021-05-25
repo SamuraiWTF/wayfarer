@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from "react-query";
 import AuthContext from "../components/context/AuthContext";
 import { useContext, useState } from "react";
+import useApiOrigin from "../hooks/useApiOrigin";
 import TeamLabel from '../components/shared/TeamLabel';
 import TicketStats from '../components/teams/TicketStats';
 import TeamMemberList from '../components/teams/TeamMemberList';
@@ -12,13 +13,14 @@ const TeamDetails = () => {
     const { token, clearAuth } = useContext(AuthContext);
 
     // Hooks
+    const apiOrigin = useApiOrigin();
     const { teamId } = useParams();
     const [currentAction, setCurrentAction] = useState('none')
     const [ actionTarget, setActionTarget ] = useState()
 
     // Data Queries
     const { isLoading, error, data } = useQuery(['teamDetails', teamId],
-        () => fetch(`http://localhost:3001/team/${teamId}`, { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.json()),
+        () => fetch(`${apiOrigin}/team/${teamId}`, { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.json()),
         {
             onSettled: (data) => {
                 if (data.reauth)

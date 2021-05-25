@@ -1,12 +1,14 @@
 import { useQuery } from 'react-query';
 import AuthContext from "../context/AuthContext";
 import { useContext } from 'react';
+import useApiOrigin from "../../hooks/useApiOrigin";
 
 const UserLabel = ({ userId }) => {
     const { token, clearAuth } = useContext(AuthContext);
+    const apiOrigin = useApiOrigin();
 
     const { isLoading, error, data } = useQuery(['user', userId], () =>
-        fetch(`http://localhost:3001/user/${userId}/`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
+        fetch(`${apiOrigin}/user/${userId}/`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
         }),
         {
