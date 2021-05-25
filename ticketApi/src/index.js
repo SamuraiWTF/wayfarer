@@ -11,11 +11,37 @@ const cookieParser = require('cookie-parser')
 
 const iam = require('./middleware/iam')
 
-const corsOptions = {
-  origin: ['http://localhost:3000'],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Api-Key']
+function generateCorsOptions(type, policy) {
+  let originPolicy;
+  switch(type.toLowerCase()) {
+    case 'literal':
+      originPolicy = [policy]
+      break
+    case 'regex':
+      originPolicy = new RegExp(policy)
+      break
+    default:
+      throw new Error('Invalid API_CORS_TYPE env variable specified: ' + type)
+  }
+  return {
+    origin: originPolicy,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Api-Key']
+  }
 }
+
+const appConfig = {
+  listenPort: process.env.API_PORT ? parseInt(process.env.API_PORT) : 3001,
+  corsPolicy: process.env.API_CORS_POLICY || 'http://localhost:3000',
+  corsType: process.env.API_CORS_TYPE || 'literal'
+}
+
+
+console.log('appConfig ', JSON.stringify(appConfig))
+
+const corsOptions = generateCorsOptions(appConfig.corsType, appConfig.corsPolicy)
+
+console.log('corsOptions ', corsOptions)
 
 app.use(cors(corsOptions))
 app.use(express.json())
@@ -46,8 +72,12 @@ app.post('/ticket/:ticketId/assign', iam.validateTokenSig, ticketController.upda
 
 app.patch('/ticket/:ticketId', iam.validateTokenSig, ticketController.partialUpdate)
 
+<<<<<<< HEAD
 app.post('/ticket/create', iam.validateTokenSig, ticketController.create)
 
 app.listen(3001)
+=======
+app.listen(appConfig.listenPort)
+>>>>>>> Added env variables to API for selecting the port and parameterizing the CORS policy
 
-console.log('listening')
+console.log(`listening on ${appConfig.listenPort}`)
