@@ -47,7 +47,7 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
 
     const { users, teams } = data.data;
     const teamsOptions = [{ id: -1, name: '*' }, ...teams];
-    const usersOptions = [{ id: -1, name: '*' }, ...users];
+    const usersOptions = [{ id: -1, name: '*' }, { id: 0, name: 'Unassigned' }, ...users];
 
     const changeFilters = (key, value, setter) => {
         if (value === '*') value = -1;
