@@ -1,7 +1,4 @@
-
 const TicketStats = ({ data: { open, closed, unassigned, overdue }, onClick: onTileClick }) => {
-
-
     if(!onTileClick)
         onTileClick = (status) => { alert(`navigate to ${status} tickets.`) }
     return <div className="container has-text-center">
