@@ -5,12 +5,11 @@ import AuthContext from "../context/AuthContext";
 import { useContext } from 'react';
 
 const FilterBar = ({ userId, defaultFilters, onChange }) => {
-    const { token, clearAuth } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
     const selectedFilters = new URLSearchParams(window.location.search);
     const [filterStatus, setFilterStatus] = useState(selectedFilters.get('status') || '*')
     const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || '*')
     const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('user') || '*')
-
     const { isLoading, error, data } = useQuery('filterOptions', () => 
         fetch(`http://localhost:3001/options/filtering`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
