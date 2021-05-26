@@ -10,7 +10,7 @@ services:
         depends_on:
             - sqldb
         networks:
-            - corp-net
+            - internalnet
         ports:
             - "3001:3001"
     sqldb:
@@ -24,12 +24,16 @@ services:
     #    command: --default-authentication-plugin=mysql_native_password
     #    restart: always
         networks:
-            - corp-net
+            - internalnet
         environment:
             MYSQL_ROOT_PASSWORD: changeme
+            constraint: node==node01
         ports:
             - "3306:3306"
 
 networks:
-    corp-net:
+    internalnet:
         driver: overlay
+        ipam:
+            config:
+                - subnet: 192.168.18.0/24
