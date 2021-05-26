@@ -1,6 +1,6 @@
-import { useQuery, useMutation } from 'react-query'
+import { useQuery } from 'react-query'
 import AuthContext from '../../components/context/AuthContext';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import useApiOrigin from "../../hooks/useApiOrigin";
 
 const UserList = ({ teamId, value, assigneeValue, setAssignee, placeholderText, onChange }) => {
@@ -37,7 +37,7 @@ const UserList = ({ teamId, value, assigneeValue, setAssignee, placeholderText, 
 
     if(data) {
         let usersOptions;
-        if (data.data) usersOptions = [{ user_id: -1, name: 'Select a user' } , ...data.data.members];
+        if (data.data) usersOptions = [{ user_id: -1, name: 'Unassigned' } , ...data.data.members];
         return (
             <div className="dropdown is-hoverable pb-2">
                 <div className="dropdown-trigger">

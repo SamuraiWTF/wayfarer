@@ -7,11 +7,11 @@ const tickets = {
             connectionPool.query(`SELECT BIN_TO_UUID(ti.id, 1) as id, ti.title, ti.body, 
             ti.team_id, t.name AS team_name, ti.assigned_to, ua.name AS assigned_to_name, ti.status,
             ti.created_by, uc.name AS created_by_name, ti.created_date, ti.due_date 
-            FROM tickets ti 
-            RIGHT JOIN users ua ON ti.assigned_to = ua.id 
+            FROM tickets ti LEFT JOIN users ua ON ti.assigned_to = ua.id
             RIGHT JOIN users uc ON ti.created_by = uc.id
             RIGHT JOIN teams t ON ti.team_id = t.id
-            WHERE ti.assigned_to = ` + (user ? user : `ti.assigned_to`) +
+            WHERE 1 = 1` +
+            (user ? ` and ti.assigned_to = ` + user : ``) +
             (team ? ` and ti.team_id = ` + team : ``) +
             (status ? ` and ti.status = "` + status + `"`: ``), [ userId ], (error, results, fields) => {
                 if(error) {
@@ -124,7 +124,7 @@ const tickets = {
             let assignedTo = fields.assignedTo;
             let userId = fields.userId;
             connectionPool.query(`INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, due_date) VALUES
-            (UUID_TO_BIN(UUID(), 1), '${title}', '${body}', ${teamId}, ${assignedTo}, 'open', ${userId}, CURRENT_TIMESTAMP)`, [title, body, teamId, assignedTo, userId], (error, results, fields) => {
+            (UUID_TO_BIN(UUID(), 1), '${title}', '${body}', ${teamId}, ` + (assignedTo !== -1 ? assignedTo : `NULL`) + `, 'open', ${userId}, CURRENT_TIMESTAMP)`, [title, body, teamId, assignedTo, userId], (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 }

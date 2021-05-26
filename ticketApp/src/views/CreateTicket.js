@@ -12,7 +12,7 @@ const CreateTicket = () => {
     let { userId } = useParams();
     let targetId = userId ? userId : currentUser;
     const selectedFilters = new URLSearchParams(window.location.search);
-    const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || 'Select a team');
+    const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || -1);
     const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('assigned_to') || -1);
     const { isLoading, error, data } = useQuery('filterOptions', () => 
         fetch(`${apiOrigin}/options/filtering`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
@@ -27,7 +27,7 @@ const CreateTicket = () => {
 
     const [btnActive, setBtnActive] = useState(false);
     const onChange = () => {
-        if (selectedFilters.get('team') && selectedFilters.get('assigned_to')
+        if (selectedFilters.get('team')
         && document.getElementById("ticketTitle").value
         && document.getElementById("ticketBody").value) {
             setBtnActive(true);
@@ -42,7 +42,7 @@ const CreateTicket = () => {
 
     if(data.error) return data.error
 
-    const { users, teams } = data.data;
+    const { teams } = data.data;
     const teamsOptions = [{ id: -1, name: 'Select a team' } , ...teams];
 
     const changeFilters = (key, value, setter) => {
@@ -51,11 +51,11 @@ const CreateTicket = () => {
         } else {
             selectedFilters.set(key, value);
         }
+        setter(value);
         if (key === 'team') {
             selectedFilters.delete('assigned_to');
             setFilterAssignedTo(-1);
         }
-        setter(value);
         let newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + selectedFilters.toString();
         window.history.pushState({path: newurl}, '', newurl);
         onChange(selectedFilters);

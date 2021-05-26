@@ -6,13 +6,12 @@ import { useContext } from 'react';
 import useApiOrigin from "../../hooks/useApiOrigin";
 
 const FilterBar = ({ userId, defaultFilters, onChange }) => {
-    const { token, clearAuth } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
     const apiOrigin = useApiOrigin();
     const selectedFilters = new URLSearchParams(window.location.search);
     const [filterStatus, setFilterStatus] = useState(selectedFilters.get('status') || '*')
     const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || '*')
     const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('user') || '*')
-
     const { isLoading, error, data } = useQuery('filterOptions', () => 
         fetch(`${apiOrigin}/options/filtering`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
