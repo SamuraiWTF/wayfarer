@@ -2,12 +2,14 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import AuthContext from '../components/context/AuthContext';
 import { useContext } from 'react';
+import useApiOrigin from "../hooks/useApiOrigin";
 
 const UserDetails = () => {
     const { token } = useContext(AuthContext);
+    const apiOrigin = useApiOrigin();
     let { userId } = useParams();
     const { isLoading, error, data } = useQuery('userDetails', () => 
-        fetch(`http://localhost:3001/user/${userId}`, { headers: { 'Authorization' : `Bearer ${token}`}}).then(res => { return res.json() })
+        fetch(`${apiOrigin}/user/${userId}`, { headers: { 'Authorization' : `Bearer ${token}`}}).then(res => { return res.json() })
     )
 
     if (isLoading) return 'Loading...'

@@ -5,9 +5,11 @@ import AuthContext from "../components/context/AuthContext";
 import FilterBar from "../components/tickets/FilterBar";
 import UserLabel from "../components/shared/UserLabel";
 import { useContext, useState } from "react";
+import useApiOrigin from "../hooks/useApiOrigin";
 
 const TicketList = () => {
     const { token, userId : currentUserID } = useContext(AuthContext);
+    const apiOrigin = useApiOrigin();
     const queryClient = useQueryClient();
     let { teamId, userId } = useParams();
     if(userId === undefined) {
@@ -16,7 +18,7 @@ const TicketList = () => {
 
     const [filters, setFilters] = useState(new URLSearchParams(window.location.search));
     const { isLoading, error, data } = useQuery(['ticketList', filters.toString()], () => {
-        return fetch(`http://localhost:3001/user/${userId}/tickets?${filters.toString()}`, {
+        return fetch(`${apiOrigin}/user/${userId}/tickets?${filters.toString()}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

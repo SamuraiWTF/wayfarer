@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import AuthContext from "../components/context/AuthContext";
 import { useContext, useState } from "react";
+import useApiOrigin from "../hooks/useApiOrigin";
 import MessageBox from "../components/shared/MessageBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MDEditor from "../components/tickets/MdEditor";
@@ -14,18 +15,19 @@ import StatusSelect from '../components/tickets/StatusSelect';
 
 const TicketDetails = () => {
     const { token, clearAuth } = useContext(AuthContext);
+    const apiOrigin = useApiOrigin();
     const queryClient = useQueryClient();
     const [editingName, setEditingName] = useState(false);
     const [editingDesc, setEditingDesc] = useState(false);
 
     let { ticketId } = useParams();
     const { isLoading, error, data } = useQuery(['ticket', ticketId], () =>
-        fetch(`http://localhost:3001/ticket/${ticketId}/`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
+        fetch(`${apiOrigin}/ticket/${ticketId}/`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
         })
     )
 
-    const doUpdateTicketFields = useMutation(updatedFields => fetch(`http://localhost:3001/ticket/${ticketId}`, {
+    const doUpdateTicketFields = useMutation(updatedFields => fetch(`${apiOrigin}/ticket/${ticketId}`, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${token}`,

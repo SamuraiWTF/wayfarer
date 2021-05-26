@@ -1,14 +1,16 @@
 import { useQuery, useMutation } from 'react-query'
 import AuthContext from '../../components/context/AuthContext';
 import { useContext, useState } from 'react';
+import useApiOrigin from "../../hooks/useApiOrigin";
 
 const AssigneeSelect = ({ teamId, ticketId, value, placeholderText }) => {
     const [assigneeValue, setAssignee] = useState(value || -1)
     const { token } = useContext(AuthContext);
+    const apiOrigin = useApiOrigin();
     const { isLoading, error, data } = useQuery(['teamMembers', teamId], () => 
-        fetch(`http://localhost:3001/team/${teamId}`, { headers: { 'Authorization' : `Bearer ${token}`}}).then(res => { return res.json() })
+        fetch(`${apiOrigin}/team/${teamId}`, { headers: { 'Authorization' : `Bearer ${token}`}}).then(res => { return res.json() })
     )
-    const doUpdate = useMutation(newAssignee => fetch(`http://localhost:3001/ticket/${ticketId}`, {
+    const doUpdate = useMutation(newAssignee => fetch(`${apiOrigin}/ticket/${ticketId}`, {
         method: 'PATCH',
         headers: {
             'Authorization': `Bearer ${token}`,

@@ -1,11 +1,13 @@
 import { useQuery, useMutation } from 'react-query'
 import AuthContext from '../../components/context/AuthContext';
 import { useContext, useState } from 'react';
+import useApiOrigin from "../../hooks/useApiOrigin";
 
 const UserList = ({ teamId, value, assigneeValue, setAssignee, placeholderText, onChange }) => {
     const { token } = useContext(AuthContext);
+    const apiOrigin = useApiOrigin();
     const { isLoading, error, data } = useQuery(['teamMembers', teamId], () => 
-        fetch(`http://localhost:3001/team/${teamId}`, { headers: { 'Authorization' : `Bearer ${token}`}}).then(res => { return res.json() })
+        fetch(`${apiOrigin}/team/${teamId}`, { headers: { 'Authorization' : `Bearer ${token}`}}).then(res => { return res.json() })
     )
 
     const handleChange = (member) => {

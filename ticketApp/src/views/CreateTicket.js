@@ -3,17 +3,19 @@ import { useQuery } from "react-query";
 import { useState } from "react";
 import AuthContext from "../components/context/AuthContext";
 import { useContext } from "react";
+import useApiOrigin from "../hooks/useApiOrigin";
 import UserList from "../components/tickets/UserList";
 
 const CreateTicket = () => {
     const { token, userId: currentUser } = useContext(AuthContext);
+    const apiOrigin = useApiOrigin();
     let { userId } = useParams();
     let targetId = userId ? userId : currentUser;
     const selectedFilters = new URLSearchParams(window.location.search);
     const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || 'Select a team');
     const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('assigned_to') || -1);
     const { isLoading, error, data } = useQuery('filterOptions', () => 
-        fetch(`http://localhost:3001/options/filtering`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
+        fetch(`${apiOrigin}/options/filtering`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
         }),
         {
@@ -60,7 +62,7 @@ const CreateTicket = () => {
     }
 
     const submitTicket = () => {
-        fetch('http://localhost:3001/ticket/create', {
+        fetch(`${apiOrigin}/ticket/create`, {
             method: 'post',
             body: JSON.stringify({ title: document.getElementById("ticketTitle").value,
                 body: document.getElementById("ticketBody").value,

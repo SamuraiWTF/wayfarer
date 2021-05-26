@@ -1,15 +1,17 @@
 import { useParams, Link } from "react-router-dom";
 import AuthContext from "../components/context/AuthContext";
 import { useContext } from "react";
+import useApiOrigin from "../hooks/useApiOrigin";
 import { useQuery } from 'react-query';
 
 const TeamList = () => {
     const { token, userId: currentUser } = useContext(AuthContext);
+    const apiOrigin = useApiOrigin();
     let { userId } = useParams();
     let targetId = userId ? userId : currentUser;
 
     const { isLoading, error, data } = useQuery(['teamsByUser', targetId], () =>
-    fetch(`http://localhost:3001/user/${targetId}/teams`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
+    fetch(`${apiOrigin}/user/${targetId}/teams`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
         return res.json()
     })
 )
