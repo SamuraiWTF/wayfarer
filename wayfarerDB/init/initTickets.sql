@@ -158,6 +158,33 @@ INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, 
     'open',
     3,
     CURRENT_TIMESTAMP
+),(
+    UUID_TO_BIN(UUID(), 1),
+    'New account creation',
+    'I need to create a new member account for my team. What does the process look like for this?',
+    @cust_supp_team_id,
+    NULL,
+    'open',
+    2,
+    CURRENT_TIMESTAMP
+),(
+    UUID_TO_BIN(UUID(), 1),
+    'Communication and contact methods',
+    'I have called the head office, but I received no reply. I am in a different timezone; what would be the best method of contact?',
+    @cust_supp_team_id,
+    1,
+    'open',
+    1,
+    CURRENT_TIMESTAMP
+),(
+    UUID_TO_BIN(UUID(), 1),
+    'Filtering not working as intended',
+    'The filter bar for tickets is not fully fleshed out. Among other errors, sorting by unassigned user has no effect.',
+    @help_desk_team_id,
+    2,
+    'closed',
+    3,
+    CURRENT_TIMESTAMP
 );
 
 -- Create App User
