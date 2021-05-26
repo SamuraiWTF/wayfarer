@@ -40,7 +40,7 @@ const NavBar = ({ userId }) => {
           <Link to={`/user/${userId}/tickets?group=watched`} className="navbar-item">
             Watched Tickets
           </Link>
-          <Link to="/tickets?assignedTo=unassigned" className="navbar-item">
+          <Link to="/tickets?user=0" className="navbar-item">
             Unassigned Tickets
           </Link>
         </div>

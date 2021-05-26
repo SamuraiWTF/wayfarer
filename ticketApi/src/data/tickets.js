@@ -11,7 +11,7 @@ const tickets = {
             RIGHT JOIN users uc ON ti.created_by = uc.id
             RIGHT JOIN teams t ON ti.team_id = t.id
             WHERE 1 = 1` +
-            (user ? ` and ti.assigned_to = ` + user : ``) +
+            (user ? ` and ti.assigned_to ` + (user == 0 ? `IS NULL` : `= ` + user) : ``) +
             (team ? ` and ti.team_id = ` + team : ``) +
             (status ? ` and ti.status = "` + status + `"`: ``), [ userId ], (error, results, fields) => {
                 if(error) {
