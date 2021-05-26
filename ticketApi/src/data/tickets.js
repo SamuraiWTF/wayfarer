@@ -2,7 +2,7 @@ const connectionPool = require('./mysqlConnectionPool')
 const { errorCodes } = require('./errorCodes')
 
 const tickets = {
-    getTicketsByAssignedUser: (userId, user, team, status) => {
+    getTicketsByAssignedUser: (userId, user, team, status, due) => {
         return new Promise((resolve, reject) => {
             connectionPool.query(`SELECT BIN_TO_UUID(ti.id, 1) as id, ti.title, ti.body, 
             ti.team_id, t.name AS team_name, ti.assigned_to, ua.name AS assigned_to_name, ti.status,
@@ -13,7 +13,8 @@ const tickets = {
             WHERE 1 = 1` +
             (user ? ` and ti.assigned_to ` + (user == 0 ? `IS NULL` : `= ` + user) : ``) +
             (team ? ` and ti.team_id = ` + team : ``) +
-            (status ? ` and ti.status = "` + status + `"`: ``), [ userId ], (error, results, fields) => {
+            (status ? ` and ti.status = "` + status + `"`: ``) +
+            (due ? ` and CURDATE() ` + (due == 'overdue' ? `>` : '<=') + ` ti.due_date` : ``), [ userId ], (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 }

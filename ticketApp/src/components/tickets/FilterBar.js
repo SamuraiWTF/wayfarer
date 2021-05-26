@@ -12,6 +12,7 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
     const [filterStatus, setFilterStatus] = useState(selectedFilters.get('status') || '*')
     const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || '*')
     const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('user') || '*')
+    const [filterDue, setFilterDue] = useState(selectedFilters.get('due') || '*')
     const { isLoading, error, data } = useQuery('filterOptions', () => 
         fetch(`${apiOrigin}/options/filtering`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
@@ -109,6 +110,22 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
                                 ['*', 'open', 'closed'].filter(val => val !== filterStatus).map(status => 
                                     <span style={{cursor: 'pointer'}} key={`status-${status}`} className="navbar-item" onClick={() => { changeFilters('status', status, setFilterStatus) }}>
                                         { status }
+                                    </span>
+                                )
+                            }
+                        </div>
+                </div>
+                <div className="navbar-item"></div>
+                <div className="navbar-item">Due:</div>
+                <div className="navbar-item has-dropdown is-hoverable">
+                        <span className="navbar-link">
+                        {filterDue}
+                        </span>
+                        <div className="navbar-dropdown">
+                            {
+                                ['*', 'overdue', 'not_overdue'].filter(val => val !== filterDue).map(due => 
+                                    <span style={{cursor: 'pointer'}} key={`due-${due}`} className="navbar-item" onClick={() => { changeFilters('due', due, setFilterDue) }}>
+                                        { due }
                                     </span>
                                 )
                             }

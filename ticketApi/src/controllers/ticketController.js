@@ -3,7 +3,7 @@ const { sendErrorResponse, sendSuccessResponse } = require('./responseUtils')
 
 const ticketController = {
     getTicketsByUser: (req, res) => {
-        tickets.getTicketsByAssignedUser(req.params.userId, req.query.user, req.query.team, req.query.status).then((tickets) => {
+        tickets.getTicketsByAssignedUser(req.params.userId, req.query.user, req.query.team, req.query.status, req.query.due).then((tickets) => {
             sendSuccessResponse(res, tickets)
         }).catch((err) => {
             sendErrorResponse(res, err)
