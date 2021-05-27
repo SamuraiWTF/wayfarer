@@ -124,8 +124,10 @@ const tickets = {
             let teamId = fields.teamId;
             let assignedTo = fields.assignedTo;
             let userId = fields.userId;
+            let date = fields.date;
             connectionPool.query(`INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, due_date) VALUES
-            (UUID_TO_BIN(UUID(), 1), '${title}', '${body}', ${teamId}, ` + (assignedTo !== -1 ? assignedTo : `NULL`) + `, 'open', ${userId}, CURRENT_TIMESTAMP)`, [title, body, teamId, assignedTo, userId], (error, results, fields) => {
+            (UUID_TO_BIN(UUID(), 1), '${title}', '${body}', ${teamId}, ` + (assignedTo !== -1 ? assignedTo : `NULL`) + `, 'open', ${userId}, '${date}')`,
+            [title, body, teamId, assignedTo, userId], (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 }

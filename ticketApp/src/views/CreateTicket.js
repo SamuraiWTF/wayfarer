@@ -5,6 +5,8 @@ import AuthContext from "../components/context/AuthContext";
 import { useContext } from "react";
 import useApiOrigin from "../hooks/useApiOrigin";
 import UserList from "../components/tickets/UserList";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CreateTicket = () => {
     const { token, userId: currentUser } = useContext(AuthContext);
@@ -14,6 +16,7 @@ const CreateTicket = () => {
     const selectedFilters = new URLSearchParams(window.location.search);
     const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || -1);
     const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('assigned_to') || -1);
+    const [filterDate, setFilterDate] = useState(new Date());
     const { isLoading, error, data } = useQuery('filterOptions', () => 
         fetch(`${apiOrigin}/options/filtering`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
@@ -62,12 +65,16 @@ const CreateTicket = () => {
     }
 
     const submitTicket = () => {
+        let day = filterDate.getDate();
+        let month = filterDate.getMonth() + 1;
+        let dateString = filterDate.getFullYear() + '-' + (month <= 9 ? '0' + month : month) + '-' + (day <= 9 ? '0' + day : day);
         fetch(`${apiOrigin}/ticket/create`, {
             method: 'post',
             body: JSON.stringify({ title: document.getElementById("ticketTitle").value,
                 body: document.getElementById("ticketBody").value,
                 teamId: filterTeam,
                 assignedTo: filterAssignedTo,
+                date: dateString,
                 userId: targetId
                  }),
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
@@ -132,6 +139,8 @@ const CreateTicket = () => {
                                     <UserList teamId={filterTeam} assigneeValue={filterAssignedTo} setAssignee={setFilterAssignedTo} onChange={changeFilters}/>
                                 </div>
                             </div>
+                            <div className="label">Due Date:</div>
+                            <DatePicker className="mb-4" selected={filterDate} minDate={new Date()} onChange={(date) => { setFilterDate(date) }} />
                             <button className="button is-fullwidth mt-5" id="submitBtn" onClick={submitTicket} disabled={!btnActive}>Submit Ticket</button>
                         </div>
                     </div>

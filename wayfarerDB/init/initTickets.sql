@@ -74,7 +74,7 @@ CREATE TABLE tickets (
     status VARCHAR(24) NOT NULL DEFAULT 'open',
     created_by INT UNSIGNED,
     created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    due_date TIMESTAMP NULL,
+    due_date DATE NULL,
     FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
     FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL -- For the case where a user is no longer.
@@ -157,7 +157,7 @@ INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, 
     2,
     'open',
     3,
-    CURRENT_TIMESTAMP
+    CURRENT_DATE()
 ),(
     UUID_TO_BIN(UUID(), 1),
     'New account creation',
@@ -166,7 +166,7 @@ INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, 
     NULL,
     'open',
     2,
-    CURRENT_TIMESTAMP
+    CURRENT_DATE()
 ),(
     UUID_TO_BIN(UUID(), 1),
     'Communication and contact methods',
@@ -175,7 +175,7 @@ INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, 
     1,
     'open',
     1,
-    CURRENT_TIMESTAMP
+    CURRENT_DATE()
 ),(
     UUID_TO_BIN(UUID(), 1),
     'Filtering not working as intended',
@@ -184,7 +184,16 @@ INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, 
     2,
     'closed',
     3,
-    CURRENT_TIMESTAMP
+    CURRENT_DATE()
+),(
+    UUID_TO_BIN(UUID(), 1),
+    'Password reset',
+    'I need to reset the password for my account.',
+    @cust_supp_team_id,
+    3,
+    'open',
+    2,
+    '2021-05-26'
 );
 
 -- Create App User
