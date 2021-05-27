@@ -1,7 +1,12 @@
 # wayfarer
 Wayfarer Training Federation target organization
 
-# build
+# scripted build and deployment
+1. `./build.sh` this will create the docker images for each part of the stack, as well as fetching application dependencies.
+1. Review the configuration in `default.env`. Any overrides can go into `.env` using the same variable names as their default counterparts.
+1. `./deploy.sh` will deploy the stack. You need to have initialized docker swarm (or use `docker swarm init` to do so). 
+
+# manual build and deployment
 1. `cd ticketApi` from project root, cd into the *ticketApi* directory.
 1. `docker build -t ticket-api .` build the ticket-api image.
 1. `cd ../ticketApp` cd into the *ticketApp* directory.
