@@ -17,7 +17,7 @@ const teams = {
                             LEFT OUTER JOIN tickets tixo ON t.id = tixo.team_id AND tixo.status = 'open'
                             LEFT OUTER JOIN tickets tixc ON t.id = tixc.team_id AND tixc.status = 'closed'
                             LEFT OUTER JOIN tickets tixod ON t.id = tixod.team_id AND CURDATE() > tixod.due_date
-                            LEFT OUTER JOIN tickets tixu ON t.id = tixu.team_id AND (tixu.assigned_to IS NULL OR tixu.assigned_to = -1) 
+                            LEFT OUTER JOIN tickets tixu ON t.id = tixu.team_id AND (tixu.assigned_to IS NULL) 
                             LEFT OUTER JOIN team_memberships m ON t.id = m.team_id AND m.user_id = ? 
                             WHERE t.id = ? 
                             GROUP BY t.id`, [requestorUserId, teamId], (error, results, fields) => {

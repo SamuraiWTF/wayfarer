@@ -77,7 +77,7 @@ const TeamDetails = () => {
                     </div>
                     <div className="column">
                         <h2 className="subtitle">Members</h2>
-                        <TeamMemberList data={data.data.members} onAction={handleMemberAction} />
+                        <TeamMemberList data={data.data.members} userRole={data.data.role} onAction={handleMemberAction} />
                     </div>
                 </div>
             </div>

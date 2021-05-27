@@ -39,9 +39,9 @@ const TeamList = () => {
         { teams.map(team => 
             <tr key={team.id}>
             <td><Link to={`/team/${team.id}`}>{team.name}</Link></td>
-            <td><Link to={`/team/${team.id}/tickets?assigned_to=${targetId}&status=open`}>{team.user_tickets}</Link></td>
-            <td><Link to={`/team/${team.id}/tickets?status=open`}>{team.open_tickets}</Link></td>
-            <td><Link to={`/team/${team.id}/tickets?status=closed`}>{team.closed_tickets}</Link></td>
+            <td><Link to={`/user/${targetId}/tickets?team=${team.id}&user=${targetId}&status=open`}>{team.user_tickets}</Link></td>
+            <td><Link to={`/user/${targetId}/tickets?team=${team.id}&status=open`}>{team.open_tickets}</Link></td>
+            <td><Link to={`/user/${targetId}/tickets?team=${team.id}&status=closed`}>{team.closed_tickets}</Link></td>
             <td>{team.role}</td>
             </tr>
         ) }  
