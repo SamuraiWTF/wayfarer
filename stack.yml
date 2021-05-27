@@ -1,20 +1,33 @@
-version: '3'
+version: '3.5'
 
 services:
     ticketapp:
         image: ticket-app:latest
+        env_file: 
+            - '.default.env'
+            - '.env'
         ports:
-            - "3000:3000"
+            - published: 7000
+              target: 3000
+              mode: host
     ticketapi:
         image: ticket-api:latest
+        env_file: 
+            - '.default.env'
+            - '.env'
         depends_on:
             - sqldb
         networks:
             - internalnet
         ports:
-            - "3001:3001"
+            - published: 3001
+              target: 3001
+              mode: host
     sqldb:
         image: wayfarer-db:latest
+        env_file: 
+            - '.default.env'
+            - '.env'
         deploy:
             resources:
                 limits:
