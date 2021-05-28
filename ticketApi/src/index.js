@@ -74,6 +74,10 @@ app.patch('/ticket/:ticketId', iam.validateTokenSig, ticketController.partialUpd
 
 app.post('/ticket/create', iam.validateTokenSig, ticketController.create)
 
+app.patch('/team/:teamId/update/:userId', iam.validateTokenSig, teamController.changeUserRole)
+
+app.delete('/team/:teamId/delete/:userId', iam.validateTokenSig, teamController.deleteUserFromTeam)
+
 app.listen(appConfig.listenPort)
 
 console.log(`listening on ${appConfig.listenPort}`)

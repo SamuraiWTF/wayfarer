@@ -70,6 +70,26 @@ const teams = {
                 })
         })
     },
+    updateTeamMembership: (teamId, userId, role) => {
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`UPDATE team_memberships SET role = \'${role}\' WHERE team_id = ${teamId} and user_id = ${userId}`, [userId], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results.changedRows)
+            })
+        })
+    },
+    deleteTeamMembership: (teamId, userId) => {
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`DELETE FROM team_memberships WHERE team_id = ${teamId} and user_id = ${userId}`, [userId], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results.changedRows)
+            })
+        })
+    },
     getTeamsByUser: (userId) => {
         return new Promise((resolve, reject) => {
             connectionPool.query(`SELECT t.id, t.name, m.role, 

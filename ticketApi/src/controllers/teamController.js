@@ -1,5 +1,6 @@
 const teams = require('../data/teams');
 const { convertToHttp } = require('../data/errorCodes');
+const { sendErrorResponse, sendSuccessResponse } = require('./responseUtils')
 
 const teamController = {
   getTeamById: (req, res) => {
@@ -18,6 +19,21 @@ const teamController = {
       let { status, message } = convertToHttp(err)
       res.status(status).json({ code: status, error: message })
     })
+  },
+  changeUserRole: (req, res) => {
+    console.log(req);
+    teams.updateTeamMembership(req.params.teamId, req.params.userId, req.body.role).then((changedRowCount) => {
+      sendSuccessResponse(res, { changedRows: changedRowCount })
+  }).catch((err) => {
+      sendErrorResponse(res, err)
+  })
+  },
+  deleteUserFromTeam: (req, res) => {
+    teams.deleteTeamMembership(req.params.teamId, req.params.userId).then((changedRowCount) => {
+      sendSuccessResponse(res, { changedRows: changedRowCount })
+  }).catch((err) => {
+      sendErrorResponse(res, err)
+  })
   }
 }
 
