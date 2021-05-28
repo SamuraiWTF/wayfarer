@@ -5,19 +5,25 @@ services:
         image: ticket-app:latest
         environment:
             - APP_PORT
+            - REACT_APP_API_ORIGIN
         ports:
             - published: ${APP_PORT}
               target: 3000
               mode: host
     ticketapi:
         image: ticket-api:latest
+        environment:
+            - API_PUBLIC_PORT
+            - API_PORT
+            - API_CORS_TYPE
+            - API_CORS_POLICY
         depends_on:
             - sqldb
         networks:
             - internalnet
         ports:
-            - published: 3001
-              target: 3001
+            - published: ${API_PUBLIC_PORT}
+              target: ${API_PORT}
               mode: host
     sqldb:
         image: wayfarer-db:latest
