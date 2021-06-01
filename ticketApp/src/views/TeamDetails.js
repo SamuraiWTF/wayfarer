@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import AuthContext from "../components/context/AuthContext";
 import { useContext, useState } from "react";
 import useApiOrigin from "../hooks/useApiOrigin";
@@ -7,6 +7,8 @@ import TeamLabel from '../components/shared/TeamLabel';
 import TicketStats from '../components/teams/TicketStats';
 import TeamMemberList from '../components/teams/TeamMemberList';
 import ChangeRoleModal from '../components/teams/ChangeRoleModal';
+import RemoveMemberModal from '../components/teams/RemoveMemberModal';
+import AddMemberModal from '../components/teams/AddMemberModal';
 
 const TeamDetails = () => {
     // Context 
@@ -19,6 +21,7 @@ const TeamDetails = () => {
     const [ actionTarget, setActionTarget ] = useState()
 
     // Data Queries
+    const queryClient = useQueryClient();
     const { isLoading, error, data } = useQuery(['teamDetails', teamId],
         () => fetch(`${apiOrigin}/team/${teamId}`, { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.json()),
         {
@@ -37,8 +40,12 @@ const TeamDetails = () => {
         return <p>Error: {error}</p>
     }
 
-    if (data.reauth) {
-        return <p>Auth expired.</p>
+    if (data.error) {
+        if(data.reauth) {
+            console.log('Session timed out, clearing auth');
+            clearAuth();
+        } 
+        return data.error;
     }
 
     // Constants
@@ -55,15 +62,81 @@ const TeamDetails = () => {
         setActionTarget(member);
     }
 
+    const changeRole = (member, selectedRole) => {
+        fetch(`${apiOrigin}/team/${teamId}/update/${member.user_id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ teamId: teamId,
+                userId: member.user_id,
+                role: selectedRole
+                 }),
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+        }).then((response) => {
+            return response.json();
+        }).then((res) => {
+            if (res.error) {
+                alert(res.error);
+            } else {
+                queryClient.invalidateQueries(['teamDetails', teamId]);
+                setCurrentAction('none');
+            }
+        })
+    }
+
+    const addMember = (member, selectedRole) => {
+        console.log("member: ", member)
+        console.log("role: ", selectedRole)
+        fetch(`${apiOrigin}/team/${teamId}/add/${member}`, {
+            method: 'POST',
+            body: JSON.stringify({ teamId: teamId,
+                userId: member,
+                role: selectedRole
+                 }),
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+        }).then((response) => {
+            return response.json();
+        }).then((res) => {
+            if (res.error) {
+                alert(res.error);
+            } else {
+                queryClient.invalidateQueries(['teamDetails', teamId]);
+                setCurrentAction('none');
+            }
+        })
+    }
+
+    const removeMember = (member) => {
+        fetch(`${apiOrigin}/team/${teamId}/delete/${member.user_id}`, {
+            method: 'DELETE',
+
+            body: JSON.stringify({ teamId: teamId,
+                userId: member.user_id,
+                 }),
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+        }).then((response) => {
+            return response.json();
+        }).then((res) => {
+            if (res.error) {
+                alert(res.error);
+            } else {
+                queryClient.invalidateQueries(['teamDetails', teamId]);
+                setCurrentAction('none');
+            }
+        })
+    }
 
     // Main Render
-    console.log('data.data ', data.data)
     return (
         <div className="container mt-4">
             <div className={`modal ${currentAction !== 'none' ? 'is-active' : ''}`}>
                 <div className="modal-background" onClick={() => { setCurrentAction('none') }}></div>
                 { currentAction === 'change_role' ? /* Todo modify filter so Admins get the full list */
-                    <ChangeRoleModal member={actionTarget} roles={roleList.slice(roleList.indexOf(data.data.role))} onClickClose={() => { setCurrentAction('none') }} /> : ''
+                    <ChangeRoleModal member={actionTarget} roles={roleList.slice(roleList.indexOf(data.data.role))} onClickSave={changeRole} onClickClose={() => { setCurrentAction('none') }} /> : ''
+                }
+                { currentAction === 'remove' ? /* Todo modify filter so Admins get the full list */
+                    <RemoveMemberModal member={actionTarget} team={data.data.name} onClickConfirm={removeMember} onClickClose={() => { setCurrentAction('none') }} /> : ''
+                }
+                { currentAction === 'add' ? /* Todo modify filter so Admins get the full list */
+                    <AddMemberModal team={data.data.name} roles={roleList} onClickConfirm={addMember} onClickClose={() => { setCurrentAction('none') }} /> : ''
                 }
             </div>
             <h1 className="title">Team: <TeamLabel teamId={teamId} /></h1>
@@ -77,7 +150,8 @@ const TeamDetails = () => {
                     </div>
                     <div className="column">
                         <h2 className="subtitle">Members</h2>
-                        <TeamMemberList data={data.data.members} onAction={handleMemberAction} />
+                        <TeamMemberList data={data.data.members} userRole={data.data.role} onAction={handleMemberAction} />
+                        <button className="button is-primary fa-align-center" onClick={() => {setCurrentAction('add')}}>Add new user</button>
                     </div>
                 </div>
             </div>

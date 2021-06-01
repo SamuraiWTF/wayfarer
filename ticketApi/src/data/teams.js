@@ -17,7 +17,7 @@ const teams = {
                             LEFT OUTER JOIN tickets tixo ON t.id = tixo.team_id AND tixo.status = 'open'
                             LEFT OUTER JOIN tickets tixc ON t.id = tixc.team_id AND tixc.status = 'closed'
                             LEFT OUTER JOIN tickets tixod ON t.id = tixod.team_id AND CURDATE() > tixod.due_date
-                            LEFT OUTER JOIN tickets tixu ON t.id = tixu.team_id AND (tixu.assigned_to IS NULL OR tixu.assigned_to = -1) 
+                            LEFT OUTER JOIN tickets tixu ON t.id = tixu.team_id AND (tixu.assigned_to IS NULL) 
                             LEFT OUTER JOIN team_memberships m ON t.id = m.team_id AND m.user_id = ? 
                             WHERE t.id = ? 
                             GROUP BY t.id`, [requestorUserId, teamId], (error, results, fields) => {
@@ -68,6 +68,48 @@ const teams = {
                     console.log('error - ', error)
                     reject(error)
                 })
+        })
+    },
+    updateTeamMembership: (teamId, userId, role) => {
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`UPDATE team_memberships SET role = \'${role}\' WHERE team_id = ${teamId} and user_id = ${userId}`, [userId], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results.changedRows)
+            })
+        })
+    },
+    addTeamMembership: (teamId, userId, role) => {
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`INSERT INTO team_memberships(user_id, team_id, role) VALUES (${userId}, ${teamId}, \'${role}\')`, [userId], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results.changedRows)
+            })
+        })
+    },
+    deleteTeamMembership: (teamId, userId) => {
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`DELETE FROM team_memberships WHERE team_id = ${teamId} and user_id = ${userId}`, [userId], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results.changedRows)
+            })
+        })
+    },
+    getAbsentUsersByTeam: (teamId) => {
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`SELECT id, name FROM users WHERE id NOT IN
+            (SELECT user_id from team_memberships WHERE team_id = ${teamId})`, [teamId, teamId], (error, results, fields) => {
+                if(error) {
+                    console.log(error);
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results)
+            })
         })
     },
     getTeamsByUser: (userId) => {

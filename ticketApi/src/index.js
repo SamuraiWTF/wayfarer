@@ -60,6 +60,8 @@ app.get('/user/:userId/tickets', ticketController.getTicketsByUser)
 
 app.get('/user/:userId/teams', iam.validateTokenSig, teamController.getTeamsByUser)
 
+app.get('/team/:teamId/absent', iam.validateTokenSig, teamController.getAbsentUsers)
+
 app.get('/team/:teamId', iam.validateTokenSig, teamController.getTeamById)
 
 app.get('/team/:teamId/tickets', iam.validateTokenSig, ticketController.getTicketsByTeam)
@@ -73,6 +75,12 @@ app.post('/ticket/:ticketId/assign', iam.validateTokenSig, ticketController.upda
 app.patch('/ticket/:ticketId', iam.validateTokenSig, ticketController.partialUpdate)
 
 app.post('/ticket/create', iam.validateTokenSig, ticketController.create)
+
+app.patch('/team/:teamId/update/:userId', iam.validateTokenSig, teamController.changeUserRole)
+
+app.post('/team/:teamId/add/:userId', iam.validateTokenSig, teamController.addUserToTeam)
+
+app.delete('/team/:teamId/delete/:userId', iam.validateTokenSig, teamController.deleteUserFromTeam)
 
 app.listen(appConfig.listenPort)
 

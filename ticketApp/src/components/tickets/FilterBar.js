@@ -6,12 +6,13 @@ import { useContext } from 'react';
 import useApiOrigin from "../../hooks/useApiOrigin";
 
 const FilterBar = ({ userId, defaultFilters, onChange }) => {
-    const { token, clearAuth } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
     const apiOrigin = useApiOrigin();
     const selectedFilters = new URLSearchParams(window.location.search);
     const [filterStatus, setFilterStatus] = useState(selectedFilters.get('status') || '*')
     const [filterTeam, setFilterTeam] = useState(selectedFilters.get('team') || '*')
-    const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('assigned_to') || '*')
+    const [filterAssignedTo, setFilterAssignedTo] = useState(selectedFilters.get('user') || '*')
+    const [filterDue, setFilterDue] = useState(selectedFilters.get('due') || '*')
     const { isLoading, error, data } = useQuery('filterOptions', () => 
         fetch(`${apiOrigin}/options/filtering`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
             return res.json()
@@ -48,12 +49,13 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
     }
 
     const { users, teams } = data.data;
-    const teamsOptions = [{ id: -1, name: '*' } , ...teams];
-    const usersOptions = [{ id: -1, name: '*' }, ...users];
+    const teamsOptions = [{ id: -1, name: '*' }, ...teams];
+    const usersOptions = [{ id: -1, name: '*' }, { id: 0, name: 'Unassigned' }, ...users];
+    const statusOptions = ['*', 'open', 'closed'];
+    const dueOptions = ['*', 'overdue', 'not overdue'];
 
     const changeFilters = (key, value, setter) => {
-        if (value === '*') value = -1;
-        if(value === -1) {
+        if(value === -1 || (key == 'status' && value == '*') || (key == 'due' && value == '*')) {
             selectedFilters.delete(key)
         } else {
             selectedFilters.set(key, value); 
@@ -102,13 +104,29 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
                 <div className="navbar-item">Status:</div>
                 <div className="navbar-item has-dropdown is-hoverable">
                         <span className="navbar-link">
-                        {filterStatus}
+                        { statusOptions.find(status => status == filterStatus) || '*'}
                         </span>
                         <div className="navbar-dropdown">
                             {
-                                ['*', 'open', 'closed'].filter(val => val !== filterStatus).map(status => 
+                                statusOptions.filter(val => val !== filterStatus).map(status => 
                                     <span style={{cursor: 'pointer'}} key={`status-${status}`} className="navbar-item" onClick={() => { changeFilters('status', status, setFilterStatus) }}>
                                         { status }
+                                    </span>
+                                )
+                            }
+                        </div>
+                </div>
+                <div className="navbar-item"></div>
+                <div className="navbar-item">Due:</div>
+                <div className="navbar-item has-dropdown is-hoverable">
+                        <span className="navbar-link">
+                        { dueOptions.find(due => due == filterDue) || '*'}
+                        </span>
+                        <div className="navbar-dropdown">
+                            {
+                                dueOptions.filter(val => val !== filterDue).map(due => 
+                                    <span style={{cursor: 'pointer'}} key={`due-${due}`} className="navbar-item" onClick={() => { changeFilters('due', due, setFilterDue) }}>
+                                        { due }
                                     </span>
                                 )
                             }

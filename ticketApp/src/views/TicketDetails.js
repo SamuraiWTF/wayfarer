@@ -41,7 +41,7 @@ const TicketDetails = () => {
     const [message, setMessage] = useState({type: 'HIDDEN', msg: 'There is no message'})
 
     if (isLoading) { return 'Loading...' } 
-    if (error) { return 'An error has occurred: ' + error.message } else 
+    if (error) { return 'An error has occurred: ' + error.message } 
     if (data.error) {
         if(data.reauth) {
             console.log('Session timed out, clearing auth');
