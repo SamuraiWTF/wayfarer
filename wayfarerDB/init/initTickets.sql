@@ -194,6 +194,33 @@ INSERT INTO tickets (id, title, body, team_id, assigned_to, status, created_by, 
     'open',
     2,
     '2021-05-26'
+),(
+    UUID_TO_BIN(UUID(), 1),
+    'Remove user account',
+    'Our team has a user that is no longer with us and we want to entirely remove the account from the system.',
+    @cust_supp_team_id,
+    1,
+    'closed',
+    3,
+    '2021-06-01'
+),(
+    UUID_TO_BIN(UUID(), 1),
+    'View account details for members of team',
+    'A useful feature would be for owners to be able to view info about their team members. In the meantime, any way of doing this?',
+    @cust_supp_team_id,
+    2,
+    'open',
+    2,
+    CURRENT_DATE()
+),(
+    UUID_TO_BIN(UUID(), 1),
+    'Inaccuracte ticket counts for team',
+    'When browsing by team view, the counts for "open", "unassigned", etc do not seem to be correct.',
+    @help_desk_team_id,
+    NULL,
+    'closed',
+    3,
+    CURRENT_DATE()
 );
 
 -- Create App User
