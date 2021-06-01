@@ -21,8 +21,14 @@ const teamController = {
     })
   },
   changeUserRole: (req, res) => {
-    console.log(req);
     teams.updateTeamMembership(req.params.teamId, req.params.userId, req.body.role).then((changedRowCount) => {
+      sendSuccessResponse(res, { changedRows: changedRowCount })
+  }).catch((err) => {
+      sendErrorResponse(res, err)
+  })
+  },
+  addUserToTeam: (req, res) => {
+    teams.addTeamMembership(req.params.teamId, req.params.userId, req.body.role).then((changedRowCount) => {
       sendSuccessResponse(res, { changedRows: changedRowCount })
   }).catch((err) => {
       sendErrorResponse(res, err)
@@ -34,6 +40,14 @@ const teamController = {
   }).catch((err) => {
       sendErrorResponse(res, err)
   })
+  },
+  getAbsentUsers: (req, res) => {
+    teams.getAbsentUsersByTeam(req.params.teamId).then((userTeams) => {
+      res.status(200).json({ code: 200, data: userTeams || [] })
+    }).catch((err) => {
+      let { status, message } = convertToHttp(err)
+      res.status(status).json({ code: status, error: message })
+    })
   }
 }
 

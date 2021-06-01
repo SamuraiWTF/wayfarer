@@ -8,6 +8,7 @@ import TicketStats from '../components/teams/TicketStats';
 import TeamMemberList from '../components/teams/TeamMemberList';
 import ChangeRoleModal from '../components/teams/ChangeRoleModal';
 import RemoveMemberModal from '../components/teams/RemoveMemberModal';
+import AddMemberModal from '../components/teams/AddMemberModal';
 
 const TeamDetails = () => {
     // Context 
@@ -45,7 +46,7 @@ const TeamDetails = () => {
             clearAuth();
         } 
         return data.error;
-    } 
+    }
 
     // Constants
     const roleList = ['owner', 'manager', 'member']
@@ -66,6 +67,28 @@ const TeamDetails = () => {
             method: 'PATCH',
             body: JSON.stringify({ teamId: teamId,
                 userId: member.user_id,
+                role: selectedRole
+                 }),
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+        }).then((response) => {
+            return response.json();
+        }).then((res) => {
+            if (res.error) {
+                alert(res.error);
+            } else {
+                queryClient.invalidateQueries(['teamDetails', teamId]);
+                setCurrentAction('none');
+            }
+        })
+    }
+
+    const addMember = (member, selectedRole) => {
+        console.log("member: ", member)
+        console.log("role: ", selectedRole)
+        fetch(`${apiOrigin}/team/${teamId}/add/${member}`, {
+            method: 'POST',
+            body: JSON.stringify({ teamId: teamId,
+                userId: member,
                 role: selectedRole
                  }),
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
@@ -112,6 +135,9 @@ const TeamDetails = () => {
                 { currentAction === 'remove' ? /* Todo modify filter so Admins get the full list */
                     <RemoveMemberModal member={actionTarget} team={data.data.name} onClickConfirm={removeMember} onClickClose={() => { setCurrentAction('none') }} /> : ''
                 }
+                { currentAction === 'add' ? /* Todo modify filter so Admins get the full list */
+                    <AddMemberModal team={data.data.name} roles={roleList} onClickConfirm={addMember} onClickClose={() => { setCurrentAction('none') }} /> : ''
+                }
             </div>
             <h1 className="title">Team: <TeamLabel teamId={teamId} /></h1>
             <div className="content">
@@ -125,6 +151,7 @@ const TeamDetails = () => {
                     <div className="column">
                         <h2 className="subtitle">Members</h2>
                         <TeamMemberList data={data.data.members} userRole={data.data.role} onAction={handleMemberAction} />
+                        <button className="button is-primary fa-align-center" onClick={() => {setCurrentAction('add')}}>Add new user</button>
                     </div>
                 </div>
             </div>

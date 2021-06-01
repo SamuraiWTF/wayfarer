@@ -117,9 +117,6 @@ const CreateTicket = () => {
                                         <div className="dropdown-trigger">
                                             <button className="button" aria-haspopup="true" aria-controls="dropdown-menu">
                                                 <span>{ teamsOptions.find(team => team.id === filterTeam)?.name || 'Select a team'}</span>
-                                                <span className="icon is-small">
-                                                    <i className="fa fa-angle-down" aria-hidden="true"></i>
-                                                </span>
                                             </button>
                                         </div>
                                         <div className="dropdown-menu" id="dropdown-menu" role="menu">
@@ -141,7 +138,7 @@ const CreateTicket = () => {
                             </div>
                             <div className="label">Due Date:</div>
                             <DatePicker className="mb-4" selected={filterDate} minDate={new Date()} onChange={(date) => { setFilterDate(date) }} />
-                            <button className="button is-fullwidth mt-5" id="submitBtn" onClick={submitTicket} disabled={!btnActive}>Submit Ticket</button>
+                            <button className="button is-fullwidth mt-5" onClick={submitTicket} disabled={!btnActive}>Submit Ticket</button>
                         </div>
                     </div>
                 </div>

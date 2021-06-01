@@ -80,6 +80,16 @@ const teams = {
             })
         })
     },
+    addTeamMembership: (teamId, userId, role) => {
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`INSERT INTO team_memberships(user_id, team_id, role) VALUES (${userId}, ${teamId}, \'${role}\')`, [userId], (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results.changedRows)
+            })
+        })
+    },
     deleteTeamMembership: (teamId, userId) => {
         return new Promise((resolve, reject) => {
             connectionPool.query(`DELETE FROM team_memberships WHERE team_id = ${teamId} and user_id = ${userId}`, [userId], (error, results, fields) => {
@@ -87,6 +97,18 @@ const teams = {
                     return reject({ type: errorCodes.DBERR, details: error })
                 }
                 resolve(results.changedRows)
+            })
+        })
+    },
+    getAbsentUsersByTeam: (teamId) => {
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`SELECT id, name FROM users WHERE id NOT IN
+            (SELECT user_id from team_memberships WHERE team_id = ${teamId})`, [teamId, teamId], (error, results, fields) => {
+                if(error) {
+                    console.log(error);
+                    return reject({ type: errorCodes.DBERR, details: error })
+                }
+                resolve(results)
             })
         })
     },

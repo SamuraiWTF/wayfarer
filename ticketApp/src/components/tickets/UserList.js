@@ -43,9 +43,6 @@ const UserList = ({ teamId, value, assigneeValue, setAssignee, placeholderText, 
                 <div className="dropdown-trigger">
                     <button className="button" aria-haspopup="true" aria-controls="dropdown-menu">
                         <span>{ data.data ? usersOptions.find(member => member.user_id === assigneeValue)?.name : 'Select a user' }</span>
-                        <span className="icon is-small">
-                            <i className="fa fa-angle-down" aria-hidden="true"></i>
-                        </span>
                     </button>
                 </div>
                 <div className="dropdown-menu" id="dropdown-menu" role="menu">
