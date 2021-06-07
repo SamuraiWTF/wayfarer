@@ -1,5 +1,7 @@
 const users = require('../data/users');
 const { convertToHttp, errorCodes } = require('../data/errorCodes');
+const jwt = require('jsonwebtoken');
+const { createAuthToken } = require('../data/authUtils');
 
 const userController = {
     authenticate: async (req, res) => {
@@ -22,6 +24,20 @@ const userController = {
             let { status, message } = convertToHttp(err)
             res.status(status).send({ code: status, error: message })
         })
+    },
+    refreshAuth: (req, res) => {
+        let refreshToken = req.signedCookies.refreshToken;
+        if(refreshToken) {
+            let claims = jwt.decode(refreshToken)
+            if(claims.exp * 1000 > Date.now()) { //multiplying to match millisecond precision
+                let authToken = createAuthToken({ id: claims.userId, username: claims.username })
+                res.status(200).send({ token: authToken, userid: claims.userId })
+            } else {
+                res.status(401).send({ code: 401, error: 'refresh token has expired', redirect: '/login' })
+            }
+        } else {
+            res.status(401).send({ code: 401, error: 'no refresh token found', redirect: '/login' })
+        }
     },
     getUser: (req, res) => {
         users.getUserById(req.params.id).then((user) => {

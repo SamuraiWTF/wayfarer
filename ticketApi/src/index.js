@@ -39,6 +39,7 @@ const appConfig = {
 
 
 console.log('appConfig ', JSON.stringify(appConfig))
+const cookieSecret = 'Use a strong secret'
 
 const corsOptions = generateCorsOptions(appConfig.corsType, appConfig.corsPolicy)
 
@@ -53,7 +54,9 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'hello world'})
 })
 
-app.post('/authenticate', cookieParser('Use a strong secret'), userController.authenticate)
+app.post('/authenticate', cookieParser(cookieSecret), userController.authenticate)
+
+app.get('/auth/refresh', cookieParser(cookieSecret), userController.refreshAuth)
 
 app.get('/user/:id', iam.validateTokenSig, userController.getUser)
 

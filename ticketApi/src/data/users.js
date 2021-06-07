@@ -18,7 +18,7 @@ const users = {
                         if(results[0].password === authUtils.hashWithSalt(password, results[0].salt).hash) {
                             let token = authUtils.createAuthToken(results[0])
                             let userId = results[0].id;
-                            let payload = { token: token, userId, userId }
+                            let payload = { token: token, userId: userId }
                             let refreshToken = null;
                             if(generateRefreshToken) {
                                 refreshToken = authUtils.createRefreshCookie(results[0])
