@@ -26,7 +26,8 @@ function generateCorsOptions(type, policy) {
   return {
     origin: originPolicy,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Api-Key']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Api-Key'],
+    credentials: true
   }
 }
 
