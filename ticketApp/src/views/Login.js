@@ -9,9 +9,27 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [stayLoggedIn, setStayLoggedIn] = useState(false);
 
+    const loggedInSince = localStorage.getItem('loggedInSince');
+    if(loggedInSince && Date.now() - (30 * 24 * 60 * 60 * 1000) < loggedInSince ) {
+        fetch(`${apiOrigin}/auth/refresh`, {
+            method: 'GET',
+            credentials: 'include'
+        }).then((response) => response.json())
+        .then((res) => {
+            if(res.error) {
+                localStorage.removeItem('loggedInSince'); 
+                // Failed refresh means the token is missing or invalid. Drop into the normal login flow.
+            } else {
+                localStorage.setItem('currentUserId', res.data.userId);
+                localStorage.setItem('authToken', res.data.token);
+                statusChanged();
+            }
+        })
+    }
+
     const handleLogin = () => {
         fetch(`${apiOrigin}/authenticate`, {
-            method: 'post',
+            method: 'POST',
             body: JSON.stringify({ 'username': username, 'password': password, 'stayLoggedIn': stayLoggedIn }),
             headers: { 'Content-Type': 'application/json' }
         }).then((response) => {
