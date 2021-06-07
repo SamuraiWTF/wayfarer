@@ -30,7 +30,7 @@ const TicketList = ({ hasAuth }) => {
     )
 
     if(!hasAuth) {
-        return <Redirect to="/login?goto=/tickets" />
+        return <Redirect to={`/login?goto=${window.location.pathname + encodeURIComponent(window.location.search)}`} />
     }
 
     if (isLoading) return 'Loading...'
