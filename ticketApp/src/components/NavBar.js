@@ -35,10 +35,10 @@ const NavBar = ({ userId, hasAuth }) => {
             New Ticket
           </Link>
           <hr className="navbar-divider"/>
-          <Link to={`/user/${userId}/tickets?status=open`} className="navbar-item">
+          <Link to={`/tickets?user=${userId}&status=open`} className="navbar-item">
             My Open Tickets
           </Link>
-          <Link to={`/user/${userId}/tickets?group=watched`} className="navbar-item">
+          <Link to={`/tickets?group=watched`} className="navbar-item">
             Watched Tickets
           </Link>
           <Link to="/tickets?user=0" className="navbar-item">
