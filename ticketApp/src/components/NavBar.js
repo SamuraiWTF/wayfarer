@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 
-const NavBar = ({ userId }) => {
-  return ( 
+const NavBar = ({ userId, hasAuth }) => {
+  if(hasAuth)
+    return ( 
   <nav className="navbar is-info" role="navigation" style={{zIndex: 5000}} aria-label="main navigation">
     <div className="navbar-brand">
         <a className="navbar-item is-tall" href="/">
@@ -14,7 +15,7 @@ const NavBar = ({ userId }) => {
         </a>
     </div>
 
-  <div id="navbarBasicExample" className="navbar-menu">
+  <div id="navbar" className="navbar-menu">
     <div className="navbar-start">
       <Link to="/" className="navbar-item">
         Dashboard
@@ -63,6 +64,8 @@ const NavBar = ({ userId }) => {
   </div>
 </nav> 
   )
+  else
+   return <></>
 }
 
 export default NavBar;

@@ -11,25 +11,45 @@ import CreateTicket from "./views/CreateTicket";
 
 const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
   let authenticated = (currentUserId && authToken) ? true : false;
-  if(authenticated) {
+  if(authenticated || true) {
     return (
     <Router>
         <main>
-            <NavBar userId={currentUserId} />
+            <NavBar hasAuth={authenticated} userId={currentUserId} />
             <Switch>
-                <Route exact path="/" component={Dashboard} />
-                <Route path="/team/:teamId" component={TeamDetails} />
-                <Route path="/teams" component={TeamList} />
-                <Route path="/ticket/new" component={CreateTicket} />
-                <Route path="/ticket/:ticketId" component={TicketDetails} />
-                <Route path="/team/:teamId/tickets" component={TicketList} />
-                <Route path="/tickets" component={TicketList} />
-                <Route path="/user/:userId/tickets/team/:teamId/:filterGroup" component={TicketList} />
-                <Route path="/user/:userId/tickets/:filterGroup" component={TicketList} />
-                <Route path="/user/:userId/tickets" component={TicketList} />
-                <Route path="/user/:userId/teams" component={TeamList} exact={true} />
-                <Route path="/user/:userId" component={UserDetails} />
-                <Route path="/user" component={UserDetails} />
+                <Route exact path="/" component={Dashboard}>
+                  <Dashboard hasAuth={authenticated} />
+                </Route>
+                <Route path="/team/:teamId">
+                  <TeamDetails hasAuth={authenticated} />  
+                </Route>
+                <Route path="/teams">
+                  <TeamList hasAuth={authenticated} />
+                </Route>
+                <Route path="/ticket/new">
+                  <CreateTicket hasAuth={authenticated} />
+                </Route>
+                <Route path="/ticket/:ticketId">
+                  <TicketDetails hasAuth={authenticated} />
+                </Route>
+                <Route path="/tickets">
+                  <TicketList hasAuth={authenticated} />
+                </Route>
+                <Route path="/user/:userId/teams" exact={true}>
+                  <TeamList hasAuth={authenticated} />
+                </Route>
+                <Route path="/user/:userId">
+                  <UserDetails hasAuth={authenticated} />
+                </Route>
+                <Route path="/user/:userId">
+                  <UserDetails hasAuth={authenticated} />
+                </Route>
+                <Route path="/user">
+                  <UserDetails hasAuth={authenticated} />
+                </Route>
+                <Route path="/login">
+                  <Login authStatusChanged={authStatusChanged} hasAuth={authenticated} />
+                </Route>
             </Switch>
         </main>
     </Router>

@@ -1,13 +1,20 @@
 import React, { useState, useContext } from "react";
 import useApiOrigin from "../hooks/useApiOrigin";
 import AuthContext from "../components/context/AuthContext";
+import { Redirect } from "react-router-dom";
+import useQueryParams from "../hooks/useQueryParams";
 
-const Login = () => {
+const Login = ({ hasAuth }) => {
     const { statusChanged } = useContext(AuthContext);
     const apiOrigin = useApiOrigin();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [stayLoggedIn, setStayLoggedIn] = useState(false);
+    const goto = useQueryParams().get('goto');
+
+    if(hasAuth) {
+        return <Redirect to={goto || '/'} />
+    }
 
     const loggedInSince = localStorage.getItem('loggedInSince');
     if(loggedInSince && Date.now() - (30 * 24 * 60 * 60 * 1000) < loggedInSince ) {

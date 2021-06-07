@@ -6,8 +6,9 @@ import FilterBar from "../components/tickets/FilterBar";
 import UserLabel from "../components/shared/UserLabel";
 import { useContext, useState } from "react";
 import useApiOrigin from "../hooks/useApiOrigin";
+import { Redirect } from "react-router-dom";
 
-const TicketList = () => {
+const TicketList = ({ hasAuth }) => {
     const { token, userId : currentUserID } = useContext(AuthContext);
     const apiOrigin = useApiOrigin();
     const queryClient = useQueryClient();
@@ -27,6 +28,10 @@ const TicketList = () => {
         })
     }
     )
+
+    if(!hasAuth) {
+        return <Redirect to="/login?goto=/tickets" />
+    }
 
     if (isLoading) return 'Loading...'
 
