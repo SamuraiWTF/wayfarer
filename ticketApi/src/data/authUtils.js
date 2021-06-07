@@ -31,6 +31,11 @@ exports.createAuthToken = (user) => {
     return jwt.sign(claims, signingSecret, { expiresIn: '1h' })
 }
 
+exports.createRefreshCookie = (user) => {
+    let claims = { userId: user.id, username: user.username, purpose: 'refresh' }
+    return jwt.sign(claims, signingSecret, { expiresIn: '30d' })
+}
+
 exports.validateTokenSig = (token) => {
     try {
         let claims = jwt.verify(token, signingSecret)

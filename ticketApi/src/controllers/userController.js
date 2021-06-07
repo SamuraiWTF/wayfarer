@@ -8,7 +8,10 @@ const userController = {
             res.cookie('loginAttempts', invalidAttempts, { signed: true, httpOnly: true, maxAge: (60000 * 20 ) })
             return res.status(401).send({ code: 401, error: 'Too many login attempts. Account locked.'})
         }
-        users.authenticate(req.body.username, req.body.password).then((data) => {
+        users.authenticate(req.body.username, req.body.password, req.body.stayLoggedIn).then(([data, refreshCookie]) => {
+            if(req.body.stayLoggedIn) {
+                res.cookie('refreshToken', refreshCookie, { signed: true, httpOnly: true, maxAge: (60000 * 60 * 24 * 30) })
+            } 
             res.status(200).send({ code: 200, data: data})
         }).catch((err) => {
             if(err.type === errorCodes.BADPASS) {
