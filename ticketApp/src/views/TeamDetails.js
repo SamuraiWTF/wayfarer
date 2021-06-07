@@ -9,8 +9,9 @@ import TeamMemberList from '../components/teams/TeamMemberList';
 import ChangeRoleModal from '../components/teams/ChangeRoleModal';
 import RemoveMemberModal from '../components/teams/RemoveMemberModal';
 import AddMemberModal from '../components/teams/AddMemberModal';
+import { Redirect } from 'react-router-dom';
 
-const TeamDetails = () => {
+const TeamDetails = ({ hasAuth }) => {
     // Context 
     const { token, clearAuth } = useContext(AuthContext);
 
@@ -31,6 +32,10 @@ const TeamDetails = () => {
             }
         })
 
+    // Auth Check
+    if(!hasAuth) {
+        return <Redirect to={`/login?goto=${window.location.pathname}`} />
+    }
     // Early Renders
     if (isLoading) {
         return <p>Loadings...</p>

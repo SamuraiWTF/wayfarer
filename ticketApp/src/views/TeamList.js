@@ -1,10 +1,10 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Redirect } from "react-router-dom";
 import AuthContext from "../components/context/AuthContext";
 import { useContext } from "react";
 import useApiOrigin from "../hooks/useApiOrigin";
 import { useQuery } from 'react-query';
 
-const TeamList = () => {
+const TeamList = ({ hasAuth }) => {
     const { token, userId: currentUser } = useContext(AuthContext);
     const apiOrigin = useApiOrigin();
     let { userId } = useParams();
@@ -14,7 +14,11 @@ const TeamList = () => {
     fetch(`${apiOrigin}/user/${targetId}/teams`, { headers: { 'Authorization': `Bearer ${token}`}}).then(res => {
         return res.json()
     })
-)
+    )
+
+    if(!hasAuth) {
+        return <Redirect to={`/login?goto=${window.location.pathname}`} />
+    }
     
     if(isLoading) {
         return <div>Loading...</div>

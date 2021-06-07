@@ -11,7 +11,7 @@ import CreateTicket from "./views/CreateTicket";
 
 const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
   let authenticated = (currentUserId && authToken) ? true : false;
-  if(authenticated || true) {
+
     return (
     <Router>
         <main>
@@ -54,15 +54,6 @@ const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
         </main>
     </Router>
   );
-  } else {
-    return (
-      <Router>
-        <main>
-          <Route path="/" render={props => <Login authStatusChanged={authStatusChanged} />} />
-        </main>
-      </Router>
-    )
-  }
 }
 
 export default Routes;
