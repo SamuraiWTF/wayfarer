@@ -28,7 +28,7 @@ const admin = {
                 ?, 
                 ?, 
                 ?
-            )`, [name, username, salt, hash, isadmin || false], (error, results, fileds) => {
+            )`, [name, username, salt, hash, isadmin === 'true' ? 1 : 0], (error, results, fileds) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 }

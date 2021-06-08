@@ -21,6 +21,7 @@ const userController = {
                 console.log('invalid attempts ', invalidAttempts)
                 res.cookie('loginAttempts', invalidAttempts, { signed: true, httpOnly: true, maxAge: (60000 * 20 ) })
             }
+            console.log('login failed - ', err)
             let { status, message } = convertToHttp(err)
             res.status(status).send({ code: status, error: message })
         })
