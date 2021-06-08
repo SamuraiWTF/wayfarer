@@ -25,7 +25,7 @@ exports.hashWithSalt = (password, salt) => {
 
 exports.createAuthToken = (user) => {
     let claims = { userId: user.id, username: user.username }
-    if(user.isAdmin === 1) {
+    if(user.isadmin === 1) {
         claims.isAdmin = true
     }
     return jwt.sign(claims, signingSecret, { expiresIn: '1h' })

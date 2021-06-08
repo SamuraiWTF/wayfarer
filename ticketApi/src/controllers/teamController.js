@@ -5,7 +5,6 @@ const { sendErrorResponse, sendSuccessResponse } = require('./responseUtils')
 const teamController = {
   getTeamById: (req, res) => {
     teams.getTeamDetails(req.params.teamId, req.claims.userId).then((team) => {
-      console.log('team role ', typeof team.role)
       res.status(200).json({ code: 200, data: team })
     }).catch((err) => {
       let { status, message } = convertToHttp(err)

@@ -6,6 +6,7 @@ const app = express()
 const userController = require('./controllers/userController')
 const ticketController = require('./controllers/ticketController')
 const teamController = require('./controllers/teamController')
+const adminController = require('./controllers/adminController')
 
 const cookieParser = require('cookie-parser')
 
@@ -85,6 +86,10 @@ app.patch('/team/:teamId/update/:userId', iam.validateTokenSig, teamController.c
 app.post('/team/:teamId/add/:userId', iam.validateTokenSig, teamController.addUserToTeam)
 
 app.delete('/team/:teamId/delete/:userId', iam.validateTokenSig, teamController.deleteUserFromTeam)
+
+app.get('/admin/users', iam.validateTokenSig, adminController.getUsers)
+
+app.post('/admin/user/new', iam.validateTokenSig, adminController.addUser)
 
 app.listen(appConfig.listenPort)
 
