@@ -27,6 +27,12 @@ const Login = ({ hasAuth }) => {
                 localStorage.removeItem('loggedInSince'); 
                 // Failed refresh means the token is missing or invalid. Drop into the normal login flow.
             } else {
+                const isAdmin = JSON.parse(atob(res.data.token.split('.')[1])).isAdmin;
+                if(isAdmin) {
+                    sessionStorage.setItem('isAdmin', isAdmin);
+                } else {
+                    sessionStorage.removeItem('isAdmin');
+                }
                 localStorage.setItem('currentUserId', res.data.userId);
                 localStorage.setItem('authToken', res.data.token);
                 statusChanged();
@@ -45,6 +51,12 @@ const Login = ({ hasAuth }) => {
             if (res.error) {
                 alert(res.error);
             } else {
+                const isAdmin = JSON.parse(atob(res.data.token.split('.')[1])).isAdmin;
+                if(isAdmin) {
+                    sessionStorage.setItem('isAdmin', isAdmin);
+                } else {
+                    sessionStorage.removeItem('isAdmin');
+                }
                 if(stayLoggedIn) {
                     localStorage.setItem('loggedInSince', Date.now());
                 }

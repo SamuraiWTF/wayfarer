@@ -8,14 +8,15 @@ import TeamList from "./views/TeamList";
 import UserDetails from "./views/UserDetails";
 import Login from "./views/Login";
 import CreateTicket from "./views/CreateTicket";
+import Logout from "./views/Logout";
+import AdminUsers from "./views/AdminUsers";
 
-const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
-  let authenticated = (currentUserId && authToken) ? true : false;
-
+const Routes = ({ currentUserId, authToken, authStatusChanged, isAdmin }) => {
+  let authenticated = (currentUserId && authToken) ? true : false;  
     return (
     <Router>
         <main>
-            <NavBar hasAuth={authenticated} userId={currentUserId} />
+            <NavBar hasAuth={authenticated} isAdmin={ isAdmin } userId={currentUserId} />
             <Switch>
                 <Route exact path="/" component={Dashboard}>
                   <Dashboard hasAuth={authenticated} />
@@ -50,6 +51,14 @@ const Routes = ({ currentUserId, authToken, authStatusChanged }) => {
                 <Route path="/login">
                   <Login authStatusChanged={authStatusChanged} hasAuth={authenticated} />
                 </Route>
+                <Route path="/logout">
+                  <Logout />
+                </Route>
+                { isAdmin ? 
+                  <Route path="/admin/users">
+                    <AdminUsers hasAuth={authenticated} />
+                  </Route> : <></>
+                }
             </Switch>
         </main>
     </Router>

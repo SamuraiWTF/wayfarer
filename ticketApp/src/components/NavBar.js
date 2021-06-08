@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const NavBar = ({ userId, hasAuth }) => {
+const NavBar = ({ userId, hasAuth, isAdmin }) => {
   if(hasAuth)
     return ( 
   <nav className="navbar is-info" role="navigation" style={{zIndex: 5000}} aria-label="main navigation">
@@ -53,13 +53,14 @@ const NavBar = ({ userId, hasAuth }) => {
     </div>
 
     <div className="navbar-end">
-      <div className="navbar-item">
-        <div className="buttons">
-          { /*<a className="button is-link">
-            Log in
-  </a> */}
-        </div>
-      </div>
+      { isAdmin ?
+        <Link to="/admin/users" className="navbar-item">
+        Admin
+        </Link> : <></>
+      }
+        <Link to="/logout" className="navbar-item">
+        Logout
+        </Link>
     </div>
   </div>
 </nav> 
