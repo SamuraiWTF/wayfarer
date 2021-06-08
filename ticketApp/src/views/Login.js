@@ -27,7 +27,8 @@ const Login = ({ hasAuth }) => {
                 localStorage.removeItem('loggedInSince'); 
                 // Failed refresh means the token is missing or invalid. Drop into the normal login flow.
             } else {
-                const isAdmin = JSON.parse(atob(res.data.token.split('.')[1])).isAdmin;
+                console.log('refresh response ', res)
+                const isAdmin = JSON.parse(atob(res.token.split('.')[1])).isAdmin;
                 if(isAdmin) {
                     sessionStorage.setItem('isAdmin', isAdmin);
                 } else {
