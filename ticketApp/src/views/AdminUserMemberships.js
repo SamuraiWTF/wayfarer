@@ -4,12 +4,12 @@ import AuthContext from '../components/context/AuthContext';
 import { useContext } from 'react';
 import useApiOrigin from "../hooks/useApiOrigin";
 
-const UserDetails = ({ hasAuth }) => {
+const AdminUserMemberships = ({ hasAuth }) => {
     const { token } = useContext(AuthContext);
     const apiOrigin = useApiOrigin();
     let { userId } = useParams();
-    const { isLoading, error, data } = useQuery('userDetails', () => 
-        fetch(`${apiOrigin}/user/${userId}`, { headers: { 'Authorization' : `Bearer ${token}`}}).then(res => { return res.json() })
+    const { isLoading, error, data } = useQuery(['admin', 'memberships', userId], () => 
+        fetch(`${apiOrigin}/admin/memberships/${userId}`, { headers: { 'Authorization' : `Bearer ${token}`}}).then(res => { return res.json() })
     )
 
     if(!hasAuth) {
@@ -34,4 +34,4 @@ const UserDetails = ({ hasAuth }) => {
     )
 }
 
-export default UserDetails;
+export default AdminUserMemberships;

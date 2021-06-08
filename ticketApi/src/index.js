@@ -6,6 +6,7 @@ const app = express()
 const userController = require('./controllers/userController')
 const ticketController = require('./controllers/ticketController')
 const teamController = require('./controllers/teamController')
+const adminController = require('./controllers/adminController')
 
 const cookieParser = require('cookie-parser')
 
@@ -26,7 +27,8 @@ function generateCorsOptions(type, policy) {
   return {
     origin: originPolicy,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Api-Key']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Api-Key'],
+    credentials: true
   }
 }
 
@@ -38,6 +40,7 @@ const appConfig = {
 
 
 console.log('appConfig ', JSON.stringify(appConfig))
+const cookieSecret = 'Use a strong secret'
 
 const corsOptions = generateCorsOptions(appConfig.corsType, appConfig.corsPolicy)
 
@@ -52,7 +55,9 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'hello world'})
 })
 
-app.post('/authenticate', cookieParser('Use a strong secret'), userController.authenticate)
+app.post('/authenticate', cookieParser(cookieSecret), userController.authenticate)
+
+app.get('/auth/refresh', cookieParser(cookieSecret), userController.refreshAuth)
 
 app.get('/user/:id', iam.validateTokenSig, userController.getUser)
 
@@ -81,6 +86,10 @@ app.patch('/team/:teamId/update/:userId', iam.validateTokenSig, teamController.c
 app.post('/team/:teamId/add/:userId', iam.validateTokenSig, teamController.addUserToTeam)
 
 app.delete('/team/:teamId/delete/:userId', iam.validateTokenSig, teamController.deleteUserFromTeam)
+
+app.get('/admin/users', iam.validateTokenSig, adminController.getUsers)
+
+app.post('/admin/user/new', iam.validateTokenSig, adminController.addUser)
 
 app.listen(appConfig.listenPort)
 

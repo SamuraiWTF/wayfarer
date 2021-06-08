@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 
-const NavBar = ({ userId }) => {
-  return ( 
+const NavBar = ({ userId, hasAuth, isAdmin }) => {
+  if(hasAuth)
+    return ( 
   <nav className="navbar is-info" role="navigation" style={{zIndex: 5000}} aria-label="main navigation">
     <div className="navbar-brand">
         <a className="navbar-item is-tall" href="/">
@@ -14,7 +15,7 @@ const NavBar = ({ userId }) => {
         </a>
     </div>
 
-  <div id="navbarBasicExample" className="navbar-menu">
+  <div id="navbar" className="navbar-menu">
     <div className="navbar-start">
       <Link to="/" className="navbar-item">
         Dashboard
@@ -34,13 +35,13 @@ const NavBar = ({ userId }) => {
             New Ticket
           </Link>
           <hr className="navbar-divider"/>
-          <Link to={`/user/${userId}/tickets?status=open`} className="navbar-item">
+          <Link to={{pathname: "/tickets", search:`?user=${userId}&status=open`}} className="navbar-item">
             My Open Tickets
           </Link>
-          <Link to={`/user/${userId}/tickets?group=watched`} className="navbar-item">
+          <Link to={{pathname:`/tickets`, search:`?group=watched`}} className="navbar-item">
             Watched Tickets
           </Link>
-          <Link to="/tickets?user=0" className="navbar-item">
+          <Link to={{pathname: "/tickets", search: "?user=0"}} className="navbar-item">
             Unassigned Tickets
           </Link>
         </div>
@@ -52,17 +53,20 @@ const NavBar = ({ userId }) => {
     </div>
 
     <div className="navbar-end">
-      <div className="navbar-item">
-        <div className="buttons">
-          { /*<a className="button is-link">
-            Log in
-  </a> */}
-        </div>
-      </div>
+      { isAdmin ?
+        <Link to="/admin/users" className="navbar-item">
+        Admin
+        </Link> : <></>
+      }
+        <Link to="/logout" className="navbar-item">
+        Logout
+        </Link>
     </div>
   </div>
 </nav> 
   )
+  else
+   return <></>
 }
 
 export default NavBar;

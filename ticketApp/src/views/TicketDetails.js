@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import AuthContext from "../components/context/AuthContext";
 import { useContext, useState } from "react";
@@ -13,7 +13,7 @@ import AssigneeSelect from "../components/tickets/AssigneeSelect";
 import StatusSelect from '../components/tickets/StatusSelect';
 
 
-const TicketDetails = () => {
+const TicketDetails = ({ hasAuth }) => {
     const { token, clearAuth } = useContext(AuthContext);
     const apiOrigin = useApiOrigin();
     const queryClient = useQueryClient();
@@ -39,6 +39,10 @@ const TicketDetails = () => {
     }})
 
     const [message, setMessage] = useState({type: 'HIDDEN', msg: 'There is no message'})
+
+    if(!hasAuth) {
+        return <Redirect to={`/login?goto=${window.location.pathname}`} />
+    }
 
     if (isLoading) { return 'Loading...' } 
     if (error) { return 'An error has occurred: ' + error.message } 

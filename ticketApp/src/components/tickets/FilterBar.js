@@ -38,7 +38,7 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
         </nav>
     }
 
-    if(error) {
+    if(error || data.error) {
         return <nav className="navbar is-dark" role="navigation" aria-label="loading filter options">
         <div className="navbar-menu">
             <div className="navbar-start">
@@ -46,6 +46,16 @@ const FilterBar = ({ userId, defaultFilters, onChange }) => {
             </div>
         </div>
     </nav>
+    }
+
+    if(!data.data) {
+        return <nav className="navbar is-dark" role="navigation" aria-label="loading filter options">
+        <div className="navbar-menu">
+            <div className="navbar-start">
+                <div className="navbar-item">Loading filtering options.</div>
+            </div>
+        </div>
+        </nav>
     }
 
     const { users, teams } = data.data;
