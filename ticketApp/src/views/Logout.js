@@ -5,6 +5,7 @@ import { Redirect } from "react-router-dom";
 const Logout = () => {
     const { clearAuth } = useContext(AuthContext);
     clearAuth();
+    localStorage.removeItem('loggedInSince'); 
     return <Redirect to="/login" />
 }
 
