@@ -112,6 +112,12 @@ INSERT INTO users (name, username, salt, password, isadmin) VALUES (
     '0586f9e2255447f7907cd5d4ff356f08',
     '7aabd050bbedf28928a4a4839eff8fbdd567d6b517b9703dc408a987eaf52d23', -- I'm not the cook.
     false
+), (
+    'Samurai Test Admin',
+    'samurai-admin',
+    '5a81ab44f1da42dda85494fa6c23547d',
+    'ab18ac755f36e1afafd2845dc2a68e3ee76272917b012906d61a098534853af2',
+    true
 );
 
 INSERT INTO teams(name) VALUE (
