@@ -43,6 +43,7 @@ const Login = ({ hasAuth }) => {
     const handleLogin = () => {
         fetch(`${apiOrigin}/authenticate`, {
             method: 'POST',
+            credentials: 'include',
             body: JSON.stringify({ 'username': username, 'password': password, 'stayLoggedIn': stayLoggedIn }),
             headers: { 'Content-Type': 'application/json' }
         }).then((response) => {
