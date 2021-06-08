@@ -97,7 +97,7 @@ const AdminUsers = ({ hasAuth }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    { data.data.map(user => <tr id={user.id}><td>{user.id}</td><td>{user.name}</td><td>{user.username}</td><td>{user.isadmin ? 'YES' : 'NO'}</td></tr>)}
+                    { data.data.map(user => <tr key={user.id}><td>{user.id}</td><td>{user.name}</td><td>{user.username}</td><td>{user.isadmin ? 'YES' : 'NO'}</td></tr>)}
                 </tbody>
             </table>
         </div></div>
