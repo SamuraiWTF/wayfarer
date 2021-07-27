@@ -42,6 +42,38 @@ services:
             constraint: node==node01
         ports:
             - "3306:3306"
+    wayfareroauth:
+        image: wayfarer-oauth:latest
+        environment:
+            - OAUTH_PUBLIC_PORT
+            - OAUTH_PORT
+            - OAUTH_CORS_TYPE
+            - OAUTH_CORS_POLICY
+        depends_on:
+            - sqloauthdb
+        networks:
+            - internalnet
+        ports:
+            - published: ${OAUTH_PUBLIC_PORT}
+              target: ${OAUTH_PORT}
+              mode: host
+    sqloauthdb:
+        image: wayfarer-oauth-db:latest
+        deploy:
+            resources:
+                limits:
+                    memory: 4G
+                reservations:
+                    memory: 2G
+    #    command: --default-authentication-plugin=mysql_native_password
+    #    restart: always
+        networks:
+            - internalnet
+        environment:
+            MYSQL_ROOT_PASSWORD: changeme
+            constraint: node==node01
+        ports:
+            - "3307:3307"
 
 networks:
     internalnet:
