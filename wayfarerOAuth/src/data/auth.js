@@ -1,4 +1,3 @@
-const authUtils = require('./authUtils')
 const connectionPool = require('./mysqlConnectionPool')
 const { errorCodes } = require('./errorCodes')
 
@@ -27,13 +26,26 @@ const auth = {
         })
     },
     updateAuthCode: (userId, code, expiresAt) => {
-        console.log(`UPDATE auth_codes SET auth_code = \'${code}\', expires_at = ${expiresAt} WHERE user_id = ${userId})`)
         return new Promise((resolve, reject) => {
             connectionPool.query(`UPDATE auth_codes SET auth_code = \'${code}\', expires_at = ${expiresAt} WHERE user_id = ${userId}`, (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 } else {
                     return resolve({ authCode: code })
+                }
+            })
+        })
+    },
+    validateCode: (userId, code, clientId, clientSecret) => {
+        return new Promise((resolve, reject) => {
+            connectionPool.query(`SELECT * FROM
+            (SELECT * FROM clients, auth_codes WHERE clients.id = auth_codes.client_id) as tableA
+            WHERE auth_code = \'${code}\' AND client_id = \'${clientId}\' AND secret = \'${clientSecret}\' AND user_id = ${userId}`, (error, results, fields) => {
+                if(error) {
+                    return reject({ type: errorCodes.DBERR, details: error })
+                } else {
+                    if (results.length === 0) return resolve(false); 
+                    return resolve(true);
                 }
             })
         })

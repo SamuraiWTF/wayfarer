@@ -1,7 +1,6 @@
 const auth = require('../data/auth');
 const authUtils = require('../data/authUtils.js');
 const { convertToHttp } = require('../data/errorCodes');
-const { sendErrorResponse, sendSuccessResponse } = require('./responseUtils')
 
 const authController =  {
     getUser: (req, res) => {
@@ -15,7 +14,7 @@ const authController =  {
     },
     addUser: (req, res) => {
         const code = authUtils.generateCode();
-        const expiresAt = authUtils.generateExpiration();
+        const expiresAt = authUtils.generateExpiration(24 * 30); // expire after 30 days
 
         auth.makeAuthCode(req.query.userId, code, expiresAt).then(data => {
             res.status(200).json({ code: 200, data: code })
@@ -26,9 +25,20 @@ const authController =  {
     },
     updateUser: (req, res) => {
         const code = authUtils.generateCode();
-        const expiresAt = authUtils.generateExpiration();
+        const expiresAt = authUtils.generateExpiration(24 * 30); // expire after 30 days
+
         auth.updateAuthCode(req.query.userId, code, expiresAt).then(data => {
             res.status(200).json({ code: 200, data: code })
+        }).catch(err => {
+            let { status, message } = convertToHttp(err)
+            res.status(status).json({ code: status, error: message })
+        })
+    },
+    validCode: (req, res, next) => {
+        const params = req.query;
+        auth.validateCode(params.userId, params.code, params.clientId, params.clientSecret).then(data => {
+            if (data) return next();
+            res.status(401).json({ status: 401, error: 'Authorization code validation failed.', reauth: true })
         }).catch(err => {
             let { status, message } = convertToHttp(err)
             res.status(status).json({ code: status, error: message })

@@ -31,7 +31,7 @@ CREATE TABLE tokens (
 
 INSERT INTO clients (id, secret) VALUES (
     'wayfarer',
-    'changeme'
+    'mys3cr3t'
 );
 
 INSERT INTO auth_codes (auth_code, expires_at, client_id, user_id) VALUES (

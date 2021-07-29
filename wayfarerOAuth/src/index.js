@@ -4,6 +4,7 @@ const cors = require('cors')
 const app = express()
 
 const authController = require("./controllers/authController.js")
+const tokenController = require("./controllers/tokenController.js")
 
 const iam = require('./middleware/iam')
 
@@ -54,6 +55,8 @@ app.get('/authenticate/update', authController.updateUser)
 app.get('/authenticate/new', authController.addUser)
 
 app.get('/authenticate', authController.getUser)
+
+app.get('/token', authController.validCode, tokenController.getToken);
 
 app.listen(appConfig.listenPort)
 

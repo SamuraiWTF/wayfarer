@@ -13,17 +13,13 @@ exports.generateCode = () => {
     return code = crypto.createHash('sha1').update(seed).digest('hex');
 }
 
-exports.generateExpiration = () => {
-    // expiration after 30 days
-    return Math.round(Date.now() / 1000) + (2592000);
+exports.generateToken = () => {
+    const seed = crypto.randomBytes(256);
+    return code = crypto.createHash('sha1').update(seed).digest('hex');
 }
 
-exports.createAuthToken = (user) => {
-    let claims = { userId: user.id, username: user.username }
-    if(user.isadmin === 1) {
-        claims.isAdmin = true
-    }
-    return true
+exports.generateExpiration = (hours) => {
+    return Math.round(Date.now() / 1000) + (3600 * hours);
 }
 
 exports.createRefreshCookie = (user) => {
