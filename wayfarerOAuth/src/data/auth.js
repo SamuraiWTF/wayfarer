@@ -36,11 +36,11 @@ const auth = {
             })
         })
     },
-    validateCode: (userId, code, clientId, clientSecret) => {
+    validateCode: (userId, code, clientId) => {
         return new Promise((resolve, reject) => {
             connectionPool.query(`SELECT * FROM
             (SELECT * FROM clients, auth_codes WHERE clients.id = auth_codes.client_id) as tableA
-            WHERE auth_code = \'${code}\' AND client_id = \'${clientId}\' AND secret = \'${clientSecret}\' AND user_id = ${userId}`, (error, results, fields) => {
+            WHERE auth_code = \'${code}\' AND client_id = \'${clientId}\' AND user_id = ${userId}`, (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 } else {

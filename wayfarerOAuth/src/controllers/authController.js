@@ -39,7 +39,7 @@ const authController =  {
     },
     validCode: (req, res, next) => {
         const params = req.query;
-        auth.validateCode(params.userId, params.code, params.clientId, params.clientSecret).then(data => {
+        auth.validateCode(params.userId, params.code, params.clientId).then(data => {
             if (data) return next();
             res.status(401).json({ status: 401, error: 'Authorization code validation failed.', reauth: true })
         }).catch(err => {
