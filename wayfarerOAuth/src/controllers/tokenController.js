@@ -4,10 +4,11 @@ const { convertToHttp } = require('../data/errorCodes');
 
 const tokenController =  {
     getToken: (req, res) => {
+        const params = req.query;
         const authToken = authUtils.generateToken();
         const expiresAt = authUtils.generateExpiration(1); // expire after one hour
 
-        token.addToken(authToken, expiresAt, req.query.userId).then(data => {
+        token.addToken(authToken, expiresAt, params.userId, params.clientId).then(data => {
             res.status(200).json({ code: 200, data: authToken })
         }).catch(err => {
             let { status, message } = convertToHttp(err)

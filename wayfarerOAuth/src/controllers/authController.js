@@ -4,7 +4,8 @@ const { convertToHttp } = require('../data/errorCodes');
 
 const authController =  {
     getUser: (req, res) => {
-        auth.getAuthCode(req.query.userId).then(data => {
+        const params = req.query;
+        auth.getAuthCode(params.userId, params.clientId).then(data => {
             if (!data) res.status(200).json({ code: 200, data: null })
             else res.status(200).json({ code: 200, data: data.auth_code, expiresAt: data.expires_at })
         }).catch(err => {
@@ -13,10 +14,11 @@ const authController =  {
         })
     },
     addUser: (req, res) => {
+        const params = req.query;
         const code = authUtils.generateCode();
         const expiresAt = authUtils.generateExpiration(24 * 30); // expire after 30 days
 
-        auth.makeAuthCode(req.query.userId, code, expiresAt).then(data => {
+        auth.makeAuthCode(params.userId, params.clientId, code, expiresAt).then(data => {
             res.status(200).json({ code: 200, data: code })
         }).catch(err => {
             let { status, message } = convertToHttp(err)
@@ -24,10 +26,11 @@ const authController =  {
         })
     },
     updateUser: (req, res) => {
+        const params = req.query;
         const code = authUtils.generateCode();
         const expiresAt = authUtils.generateExpiration(24 * 30); // expire after 30 days
 
-        auth.updateAuthCode(req.query.userId, code, expiresAt).then(data => {
+        auth.updateAuthCode(params.userId, params.clientId, code, expiresAt).then(data => {
             res.status(200).json({ code: 200, data: code })
         }).catch(err => {
             let { status, message } = convertToHttp(err)

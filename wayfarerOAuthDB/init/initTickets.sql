@@ -10,20 +10,20 @@ CREATE TABLE clients (
 );
 
 CREATE TABLE auth_codes (
-    auth_code VARCHAR(40) NOT NULL UNIQUE,
+    auth_code VARCHAR(40) NOT NULL,
     expires_at BIGINT NOT NULL,
     client_id VARCHAR(50) NOT NULL,
-    user_id INT NOT NULL UNIQUE,
-    PRIMARY KEY (auth_code),
+    user_id INT NOT NULL,
+    PRIMARY KEY (client_id, user_id),
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
 );
 
 CREATE TABLE tokens (
-    token VARCHAR(40) NOT NULL UNIQUE,
+    token VARCHAR(40) NOT NULL,
     expires_at BIGINT NOT NULL,
     client_id VARCHAR(50) NOT NULL,
     user_id INT NOT NULL,
-    PRIMARY KEY (token),
+    PRIMARY KEY (client_id, user_id),
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
 );
 

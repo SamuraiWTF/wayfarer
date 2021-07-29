@@ -2,9 +2,9 @@ const connectionPool = require('./mysqlConnectionPool')
 const { errorCodes } = require('./errorCodes')
 
 const auth = {
-    getAuthCode: (userId) => {
+    getAuthCode: (userId, clientId) => {
         return new Promise((resolve, reject) => {
-            connectionPool.query(`SELECT * FROM auth_codes WHERE user_id = ${userId}`, (error, results, fields) => {
+            connectionPool.query(`SELECT * FROM auth_codes WHERE user_id = ${userId} AND client_id = \'${clientId}\'`, (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 } else {
@@ -14,9 +14,9 @@ const auth = {
             })
         })
     },
-    makeAuthCode: (userId, code, expiresAt) => {
+    makeAuthCode: (userId, clientId, code, expiresAt) => {
         return new Promise((resolve, reject) => {
-            connectionPool.query(`INSERT INTO auth_codes(auth_code, expires_at, client_id, user_id) VALUES (\'${code}\', ${expiresAt}, 'wayfarer', ${userId})`, (error, results, fields) => {
+            connectionPool.query(`INSERT INTO auth_codes(auth_code, expires_at, client_id, user_id) VALUES (\'${code}\', ${expiresAt}, \'${clientId}\', ${userId})`, (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 } else {
@@ -25,9 +25,9 @@ const auth = {
             })
         })
     },
-    updateAuthCode: (userId, code, expiresAt) => {
+    updateAuthCode: (userId, clientId, code, expiresAt) => {
         return new Promise((resolve, reject) => {
-            connectionPool.query(`UPDATE auth_codes SET auth_code = \'${code}\', expires_at = ${expiresAt} WHERE user_id = ${userId}`, (error, results, fields) => {
+            connectionPool.query(`UPDATE auth_codes SET auth_code = \'${code}\', expires_at = ${expiresAt} WHERE user_id = ${userId} AND client_id = \'${clientId}\'`, (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 } else {

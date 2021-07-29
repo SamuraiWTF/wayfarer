@@ -75,7 +75,7 @@ const Login = ({ hasAuth }) => {
 
     const getAuthCode = () => {
         const userId = localStorage.getItem('currentUserId');
-        fetch(`${oauthOrigin}/authenticate?userId=${userId}`).then(res => res.json()).then(res => {
+        fetch(`${oauthOrigin}/authenticate?userId=${userId}&clientId=${clientId}`).then(res => res.json()).then(res => {
             if (res.error) {
                 alert(res.error);
                 setConsenting(false);
@@ -89,7 +89,7 @@ const Login = ({ hasAuth }) => {
 
     const newAuthCode = () => {
         const userId = localStorage.getItem('currentUserId');
-        fetch(`${oauthOrigin}/authenticate/new?userId=${userId}`).then(res => res.json()).then(res => {
+        fetch(`${oauthOrigin}/authenticate/new?userId=${userId}&clientId=${clientId}`).then(res => res.json()).then(res => {
             if (res.error) {
                 setConsenting(false);
                 alert(res.error);
@@ -101,7 +101,7 @@ const Login = ({ hasAuth }) => {
 
     const updateAuthCode = () => {
         const userId = localStorage.getItem('currentUserId');
-        fetch(`${oauthOrigin}/authenticate/update?userId=${userId}`).then(res => res.json()).then(res => {
+        fetch(`${oauthOrigin}/authenticate/update?userId=${userId}&clientId=${clientId}`).then(res => res.json()).then(res => {
             if (res.error) {
                 setConsenting(false);
                 alert(res.error);
