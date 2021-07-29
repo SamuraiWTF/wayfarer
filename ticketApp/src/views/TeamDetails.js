@@ -27,6 +27,7 @@ const TeamDetails = ({ hasAuth }) => {
         () => fetch(`${apiOrigin}/team/${teamId}`, { headers: { 'Authorization': `Bearer ${token}` } }).then(res => res.json()),
         {
             onSettled: (data) => {
+                console.log(data);
                 if (data.reauth)
                     clearAuth()
             }

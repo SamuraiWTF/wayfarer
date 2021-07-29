@@ -101,7 +101,7 @@ const Login = ({ hasAuth }) => {
     const getToken = (code) => {
         const userId = localStorage.getItem('currentUserId');
         const isAdmin = sessionStorage.getItem('isAdmin') ? sessionStorage.getItem('isAdmin') : false;
-        fetch(`${oauthOrigin}/token?userId=${userId}&code=${code}&clientId=${clientId}&isAdmin=${isAdmin}`).then(res => res.json()).then(res => {
+        fetch(`${oauthOrigin}/token?userId=${userId}&username=${username}&code=${code}&clientId=${clientId}&isAdmin=${isAdmin}`).then(res => res.json()).then(res => {
             if (res.error) {
                 setConsenting(false);
                 alert(res.error);

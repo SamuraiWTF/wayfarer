@@ -46,8 +46,6 @@ app.use(express.json())
 
 app.options('*', cors(corsOptions))
 
-const clientSecret = 'mys3cr3t'
-
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'hello world'})
 })

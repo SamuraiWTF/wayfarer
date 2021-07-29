@@ -8,9 +8,10 @@ exports.generateCode = () => {
     return code = crypto.createHash('sha1').update(seed).digest('hex');
 }
 
-exports.generateToken = (userId, clientId, isAdmin, expiresAt) => {
+exports.generateToken = (userId, username, clientId, isAdmin, expiresAt) => {
     const claims = {
-        sub: userId,
+        userId: userId,
+        username: username,
         iss: clientId,
         adm: isAdmin,
         exp: expiresAt
