@@ -3,8 +3,6 @@ const { errorCodes } = require('./errorCodes');
 
 const teams = {
     getTeamDetails: (teamId, requestorUserId) => {
-        console.log("team: ",teamId);
-        console.log("user: ", requestorUserId)
         return new Promise((resolve, reject) => {
                 Promise.all([
                     new Promise((resolve, reject) => {
