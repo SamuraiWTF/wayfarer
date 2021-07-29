@@ -19,7 +19,7 @@ CREATE TABLE auth_codes (
 );
 
 CREATE TABLE tokens (
-    token VARCHAR(40) NOT NULL,
+    is_admin BOOLEAN NOT NULL,
     expires_at BIGINT NOT NULL,
     client_id VARCHAR(50) NOT NULL,
     user_id INT NOT NULL,

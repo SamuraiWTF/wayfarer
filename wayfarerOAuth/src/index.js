@@ -41,6 +41,8 @@ const corsOptions = generateCorsOptions(appConfig.corsType, appConfig.corsPolicy
 
 console.log('corsOptions ', corsOptions)
 
+const clientSecret = 'mys3cr3t'
+
 app.use(cors(corsOptions))
 app.use(express.json())
 
@@ -56,7 +58,10 @@ app.get('/authenticate/new', authController.addUser)
 
 app.get('/authenticate', authController.getUser)
 
-app.get('/token', authController.validCode, tokenController.getToken);
+app.get('/token', (req, res, next) => {
+    req.query.clientSecret = clientSecret;
+    return next();
+}, authController.validCode, tokenController.getToken);
 
 app.listen(appConfig.listenPort)
 

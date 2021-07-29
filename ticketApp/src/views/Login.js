@@ -16,7 +16,6 @@ const Login = ({ hasAuth }) => {
     const goto = useQueryParams().get('goto');
 
     const clientId = 'wayfarer';
-    const clientSecret = 'mys3cr3t';
 
     if(hasAuth) {
         return <Redirect to={goto || '/'} />
@@ -40,8 +39,7 @@ const Login = ({ hasAuth }) => {
                     sessionStorage.removeItem('isAdmin');
                 }
                 localStorage.setItem('currentUserId', res.userId);
-                localStorage.setItem('authToken', res.token);
-                statusChanged();
+                setConsenting(true);
             }
         })
     }
@@ -113,7 +111,8 @@ const Login = ({ hasAuth }) => {
 
     const getToken = (code) => {
         const userId = localStorage.getItem('currentUserId');
-        fetch(`${oauthOrigin}/token?userId=${userId}&code=${code}&clientId=${clientId}&clientSecret=${clientSecret}`).then(res => res.json()).then(res => {
+        const isAdmin = sessionStorage.getItem('isAdmin') ? sessionStorage.getItem('isAdmin') : false;
+        fetch(`${oauthOrigin}/token?userId=${userId}&code=${code}&clientId=${clientId}&isAdmin=${isAdmin}`).then(res => res.json()).then(res => {
             if (res.error) {
                 setConsenting(false);
                 alert(res.error);
