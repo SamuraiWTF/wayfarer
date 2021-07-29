@@ -16,18 +16,8 @@ const auth = {
     },
     makeAuthCode: (userId, clientId, code, expiresAt) => {
         return new Promise((resolve, reject) => {
-            connectionPool.query(`INSERT INTO auth_codes(auth_code, expires_at, client_id, user_id) VALUES (\'${code}\', ${expiresAt}, \'${clientId}\', ${userId})`, (error, results, fields) => {
-                if(error) {
-                    return reject({ type: errorCodes.DBERR, details: error })
-                } else {
-                    return resolve({ authCode: code })
-                }
-            })
-        })
-    },
-    updateAuthCode: (userId, clientId, code, expiresAt) => {
-        return new Promise((resolve, reject) => {
-            connectionPool.query(`UPDATE auth_codes SET auth_code = \'${code}\', expires_at = ${expiresAt} WHERE user_id = ${userId} AND client_id = \'${clientId}\'`, (error, results, fields) => {
+            connectionPool.query(`INSERT INTO auth_codes(auth_code, expires_at, client_id, user_id) VALUES (\'${code}\', ${expiresAt}, \'${clientId}\', ${userId})
+            ON DUPLICATE KEY UPDATE auth_code = \'${code}\', expires_at = ${expiresAt}`, (error, results, fields) => {
                 if(error) {
                     return reject({ type: errorCodes.DBERR, details: error })
                 } else {

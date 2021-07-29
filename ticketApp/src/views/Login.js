@@ -66,7 +66,7 @@ const Login = ({ hasAuth }) => {
                     localStorage.setItem('loggedInSince', Date.now());
                 }
                 localStorage.setItem('currentUserId', res.data.userId);
-                setConsenting(true);
+                getAuthCode();
             }
         })
     }
@@ -76,10 +76,11 @@ const Login = ({ hasAuth }) => {
         fetch(`${oauthOrigin}/authenticate?userId=${userId}&clientId=${clientId}`).then(res => res.json()).then(res => {
             if (res.error) {
                 alert(res.error);
-                setConsenting(false);
             } else {
-                if (!res.data) newAuthCode();
-                else if (res.expiresAt < Math.round(Date.now() / 1000)) updateAuthCode();
+                // need to consent if never done before or expired grant
+                if (!res.data) console.log("never before")
+                if (res.expiresAt < Math.round(Date.now() / 1000)) console.log("expired")
+                if (!res.data || res.expiresAt < Math.round(Date.now() / 1000)) setConsenting(true);
                 else getToken(res.data);
             }
         });
@@ -88,18 +89,6 @@ const Login = ({ hasAuth }) => {
     const newAuthCode = () => {
         const userId = localStorage.getItem('currentUserId');
         fetch(`${oauthOrigin}/authenticate/new?userId=${userId}&clientId=${clientId}`).then(res => res.json()).then(res => {
-            if (res.error) {
-                setConsenting(false);
-                alert(res.error);
-            } else {
-                getToken(res.data);
-            }
-        });
-    }
-
-    const updateAuthCode = () => {
-        const userId = localStorage.getItem('currentUserId');
-        fetch(`${oauthOrigin}/authenticate/update?userId=${userId}&clientId=${clientId}`).then(res => res.json()).then(res => {
             if (res.error) {
                 setConsenting(false);
                 alert(res.error);
@@ -172,7 +161,7 @@ const Login = ({ hasAuth }) => {
                 </label>
             </div>
             <button className={"button is-link" + (consenting ? " is-hidden" : "")} onClick={handleLogin}>Login</button>
-            <button className={"button is-link mr-4" + (consenting ? "" : " is-hidden")} onClick={getAuthCode}>Confirm</button>
+            <button className={"button is-link mr-4" + (consenting ? "" : " is-hidden")} onClick={newAuthCode}>Confirm</button>
             <button className={"button is-link ml-4" + (consenting ? "" : " is-hidden")} onClick={() => setConsenting(false)}>Cancel</button>
         </div>
     </div>

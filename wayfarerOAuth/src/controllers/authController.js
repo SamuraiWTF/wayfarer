@@ -25,18 +25,6 @@ const authController =  {
             res.status(status).json({ code: status, error: message })
         })
     },
-    updateUser: (req, res) => {
-        const params = req.query;
-        const code = authUtils.generateCode();
-        const expiresAt = authUtils.generateExpiration(24 * 30); // expire after 30 days
-
-        auth.updateAuthCode(params.userId, params.clientId, code, expiresAt).then(data => {
-            res.status(200).json({ code: 200, data: code })
-        }).catch(err => {
-            let { status, message } = convertToHttp(err)
-            res.status(status).json({ code: status, error: message })
-        })
-    },
     validCode: (req, res, next) => {
         const params = req.query;
         auth.validateCode(params.userId, params.code, params.clientId).then(data => {

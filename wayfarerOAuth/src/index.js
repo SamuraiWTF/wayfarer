@@ -56,8 +56,6 @@ app.get('/authenticate', authController.getUser)
 
 app.get('/authenticate/new', authController.addUser)
 
-app.get('/authenticate/update', authController.updateUser)
-
 app.get('/token', authController.validCode, tokenController.getToken);
 
 app.listen(appConfig.listenPort)
