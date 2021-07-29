@@ -5,26 +5,25 @@ USE oauth;
 
 CREATE TABLE clients (
     id VARCHAR(50) NOT NULL UNIQUE,
-    secret VARCHAR(100)
+    secret VARCHAR(100),
     PRIMARY KEY (id)
 );
 
 CREATE TABLE auth_codes (
     auth_code VARCHAR(40) NOT NULL UNIQUE,
-    expires_at DATE NOT NULL,
-    redirect_uri VARCHAR(100) NOT NULL,
+    expires_at BIGINT NOT NULL,
     client_id VARCHAR(50) NOT NULL,
-    user_id INT NOT NULL,
-    PRIMARY KEY (auth_code)
+    user_id INT NOT NULL UNIQUE,
+    PRIMARY KEY (auth_code),
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
 );
 
 CREATE TABLE tokens (
     token VARCHAR(40) NOT NULL UNIQUE,
-    expires_at DATE NOT NULL,
+    expires_at BIGINT NOT NULL,
     client_id VARCHAR(50) NOT NULL,
     user_id INT NOT NULL,
-    PRIMARY KEY (token)
+    PRIMARY KEY (token),
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
 );
 
@@ -33,6 +32,13 @@ CREATE TABLE tokens (
 INSERT INTO clients (id, secret) VALUES (
     'wayfarer',
     'changeme'
+);
+
+INSERT INTO auth_codes (auth_code, expires_at, client_id, user_id) VALUES (
+    '662b19c05643d738ab4c36bdc1bf25bebcfdeac7',
+    1610159424,
+    'wayfarer',
+    2
 );
 
 -- Create App User
