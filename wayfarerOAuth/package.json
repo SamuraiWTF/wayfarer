@@ -1,0 +1,36 @@
+{
+  "name": "@wayfarerwtf/wayfareroauth",
+  "version": "1.0.0",
+  "description": "OAuth backend API",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "forever src/index.js",
+    "startbg": "forever start src/index.js",
+    "stopbg": "forever stop src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamuraiWTF/wayfarer.git"
+  },
+  "keywords": [
+    "security",
+    "training",
+    "api",
+    "target"
+  ],
+  "author": "Ryan Helgason (rhelgason)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SamuraiWTF/wayfarer/issues"
+  },
+  "homepage": "https://github.com/SamuraiWTF/wayfarer#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.12"
+  }
+}

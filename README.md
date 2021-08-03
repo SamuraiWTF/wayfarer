@@ -13,6 +13,10 @@ Wayfarer Training Federation target organization
 1. `docker build -t ticket-app .` build the ticket-app image.
 1. `cd ../wayfarerDB` cd into the *wayfarerDB* directory.
 1. `docker build -t wayfarer-db .` build the db image.
+1. `cd ../wayfarerOAuth` cd into the *wayfarerOAuth* directory.
+1. `docker build -t wayfarer-oauth .` build the wayfarer-oauth image.
+1. `cd ../wayfarerOAuthDB` cd into the *wayfarerOAuthDB* directory.
+1. `docker build -t wayfarer-oauth-db .` build the db image.
 1. `cd ..` change to the project root
 1. `docker swarm init` initialize docker swarm
 1. `docker stack deploy -c docker-compose.yml wayfarer-ticket` deploy the stack.
