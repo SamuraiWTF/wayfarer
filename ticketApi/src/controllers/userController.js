@@ -5,6 +5,7 @@ const { createAuthToken } = require('../data/authUtils');
 
 const userController = {
     authenticate: async (req, res) => {
+        console.log(req.body)
         let invalidAttempts = req.signedCookies.loginAttempts || 0
         if(invalidAttempts >= 5) {
             res.cookie('loginAttempts', invalidAttempts, { signed: true, httpOnly: true, maxAge: (60000 * 20 ) })

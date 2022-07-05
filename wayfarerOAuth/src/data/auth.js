@@ -26,7 +26,10 @@ const auth = {
             })
         })
     },
-    validateCode: (userId, code, clientId) => {
+    validateCode: (userId, code, clientId, clientSecret) => {
+        /*
+            This fails to validate the client secret (purposefully for now)
+        */
         return new Promise((resolve, reject) => {
             connectionPool.query(`SELECT * FROM
             (SELECT * FROM clients, auth_codes WHERE clients.id = auth_codes.client_id) as tableA
