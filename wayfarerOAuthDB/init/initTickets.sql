@@ -6,6 +6,7 @@ USE oauth;
 CREATE TABLE clients (
     id VARCHAR(50) NOT NULL UNIQUE,
     secret VARCHAR(100),
+    connection_info TEXT,
     PRIMARY KEY (id)
 );
 

@@ -74,7 +74,11 @@ app.post("/authorization", authController.handleOAuthLogin);
 app.post("/token", authController.validCode, tokenController.getToken);
 
 // Allow client apps to register themselves to be able to use the Wayfarer OAuth as a auth service
-app.post("/connect/register", authController.registerConnection);
+app.post("/connect/register", authController.registerOAuthConnection);
+
+// This here explicitly to serve to fire off a second order SSRF flaw
+// Which in this case can result in arbitrary HTML execution in a browser
+app.get("/clients/:id/logo", authController.getOAuthClientLogo)
 
 app.listen(appConfig.listenPort);
 
