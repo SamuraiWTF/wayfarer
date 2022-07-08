@@ -56,17 +56,14 @@ app.get("/", (req, res) => {
     res.status(200).json({ message: "hello world" });
 });
 
-/*
-    1. client sends request to authenticate
-        http://server/authorization?client_id=foo&redirect_uri=https://foo.com/callback&response_type=code&scope=openid%20profile&state=12345678
-*/
+app.get("/authenticate", authController.getUser);
 
 app.get("/authorization", (req, res) => {
     // Serve the OAuth login page
     // Which will make a POST to /authorization with username password and other OAuth URI params
-    res.status(200)
-    res.set('Content-Type', 'text/html')
-    res.sendFile(path.join(__dirname, '/oauth.html'))
+    res.status(200);
+    res.set("Content-Type", "text/html");
+    res.sendFile(path.join(__dirname, "/oauth.html"));
 });
 
 app.post("/authorization", authController.handleOAuthLogin);
@@ -78,7 +75,7 @@ app.post("/connect/register", authController.registerOAuthConnection);
 
 // This here explicitly to serve to fire off a second order SSRF flaw
 // Which in this case can result in arbitrary HTML execution in a browser
-app.get("/clients/:id/logo", authController.getOAuthClientLogo)
+app.get("/clients/:id/logo", authController.getOAuthClientLogo);
 
 app.listen(appConfig.listenPort);
 
