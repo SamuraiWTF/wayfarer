@@ -28,7 +28,8 @@ const userController = {
         })
     },
     refreshAuth: (req, res) => {
-        let refreshToken = req.signedCookies.refreshToken;
+        //let refreshToken = req.signedCookies.refreshToken;
+        let refreshToken = req.cookies.refreshToken;
         if(refreshToken) {
             let claims = jwt.decode(refreshToken)
             if(claims.exp * 1000 > Date.now()) { //multiplying to match millisecond precision
