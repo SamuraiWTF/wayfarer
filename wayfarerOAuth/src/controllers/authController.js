@@ -117,9 +117,10 @@ const authController = {
                 // {redirect_uri}/callback?code=<auth_code>&state=<state>
                 if (auth_res.data.token) {
                     if (response_type === "token") {
-                        res.redirect(
-                            `${query.redirect_uri}#access_token=${auth_res.data.token}&token_type=Bearer&state=${query.state}`
-                        );
+                        // 302 isn't required by the RFC, but rather the status code in implicit token flow is considered an implementation detail
+                        res.status(200);
+                        res.set('Location', `${query.redirect_uri}#access_token=${auth_res.data.token}&token_type=Bearer&state=${query.state}`);
+                        res.send(`${query.redirect_uri}#access_token=${auth_res.data.token}&token_type=Bearer&state=${query.state}`);
                     } else {
                         const code = authUtils.generateCode();
                         // store the code
