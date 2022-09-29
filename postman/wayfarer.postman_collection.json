@@ -1,0 +1,270 @@
+{
+	"info": {
+		"_postman_id": "96debaa5-7432-46b5-8bd9-32c5cd93d55f",
+		"name": "wayfarer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Client Logo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{auth_host}}/clients/:client_id/logo",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"clients",
+						":client_id",
+						"logo"
+					],
+					"variable": [
+						{
+							"key": "client_id",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "oauth client self register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"application_type\": \"web\",\n    \"redirect_uris\": [\"https://client.example.org/callback\"],\n    \"client_name\": \"example\",\n    \"logo_uri\": \"http://example.com/example.png\",\n    \"subject_type\": \"pairwise\",\n    \"sector_identifier_uri\": \"https://example.org/rdrct_uris.json\",\n    \"token_endpoint_auth_method\": \"client_secret_basic\",\n    \"jwks_uri\": \"https://client.example.org/public_keys.jwks\",\n    \"contacts\": [\"nevil@secureideas.com\"],\n    \"request_uris\": [\"https://client.example.org/rf.txt\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/connect/register",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"connect",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Wayfarer CSP Demo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_host}}/foo/:value",
+					"host": [
+						"{{api_host}}"
+					],
+					"path": [
+						"foo",
+						":value"
+					],
+					"variable": [
+						{
+							"key": "value",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "API Authenticate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"samurai\",\n    \"password\": \"samurai\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_host}}/authenticate",
+					"host": [
+						"{{api_host}}"
+					],
+					"path": [
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OAuth Implicit Grant",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"samurai\",\n    \"password\": \"samurai\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/authorization?client_id=wayfarer&user_id=1&response_type=token&redirect_uri=http://foo.bar/callback&state=123456",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"authorization"
+					],
+					"query": [
+						{
+							"key": "client_id",
+							"value": "wayfarer"
+						},
+						{
+							"key": "user_id",
+							"value": "1"
+						},
+						{
+							"key": "response_type",
+							"value": "token"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://foo.bar/callback"
+						},
+						{
+							"key": "state",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OAuth Auth Code Grant",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"samurai\",\n    \"password\": \"samurai\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{auth_host}}/authorization?client_id=wayfarer&user_id=1&response_type=code&redirect_uri=http://foo.bar/callback&state=123456",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"authorization"
+					],
+					"query": [
+						{
+							"key": "client_id",
+							"value": "wayfarer"
+						},
+						{
+							"key": "user_id",
+							"value": "1"
+						},
+						{
+							"key": "response_type",
+							"value": "code"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://foo.bar/callback"
+						},
+						{
+							"key": "state",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get OAuth Login Page",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{auth_host}}/authorization?client_id=wayfarer&user_id=1&response_type=token&redirect_uri=https://127.0.0.1:8081/oauthhack.html&state=123456",
+					"host": [
+						"{{auth_host}}"
+					],
+					"path": [
+						"authorization"
+					],
+					"query": [
+						{
+							"key": "client_id",
+							"value": "wayfarer"
+						},
+						{
+							"key": "user_id",
+							"value": "1"
+						},
+						{
+							"key": "response_type",
+							"value": "token"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://127.0.0.1:8081/oauthhack.html"
+						},
+						{
+							"key": "state",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "JTW Forgery",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsInVzZXJuYW1lIjoic2FtdXJhaV9hZG1pbiIsICJpc0FkbWluIjogdHJ1ZSwgImlhdCI6MTY1NzM0MTE5NCwiZXhwIjoyNjU3MzQ0Nzk0fQ.X6hJlogih6pDDWssY58WlB8oTBtAVqGsOgYDIzS-jSA",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{api_host}}/auth/refresh",
+					"host": [
+						"{{api_host}}"
+					],
+					"path": [
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
