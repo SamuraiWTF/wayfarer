@@ -1,61 +1,82 @@
-const express = require('express')
-const cors = require('cors')
+const express = require("express");
+const cors = require("cors");
+const querystring = require("querystring");
+const path = require("path");
 
-const app = express()
+const app = express();
 
-const authController = require("./controllers/authController.js")
-const tokenController = require("./controllers/tokenController.js")
+const authController = require("./controllers/authController.js");
+const tokenController = require("./controllers/tokenController.js");
 
-const iam = require('./middleware/iam')
+const iam = require("./middleware/iam");
 
 function generateCorsOptions(type, policy) {
     let originPolicy;
-    switch(type.toLowerCase()) {
-        case 'literal':
-            originPolicy = [policy]
-            break
-        case 'regex':
-            originPolicy = new RegExp(policy)
-            break
+    switch (type.toLowerCase()) {
+        case "literal":
+            originPolicy = [policy];
+            break;
+        case "regex":
+            originPolicy = new RegExp(policy);
+            break;
         default:
-            throw new Error('Invalid API_CORS_TYPE env variable specified: ' + type)
+            throw new Error(
+                "Invalid API_CORS_TYPE env variable specified: " + type
+            );
     }
     return {
         origin: originPolicy,
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-        allowedHeaders: ['Content-Type', 'Authorization', 'X-Api-Key'],
-        credentials: true
-    }
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        allowedHeaders: ["Content-Type", "Authorization", "X-Api-Key"],
+        credentials: true,
+    };
 }
 
 const appConfig = {
     listenPort: process.env.API_PORT ? parseInt(process.env.API_PORT) : 3002,
-    corsPolicy: process.env.API_CORS_POLICY || 'http://localhost:3000',
-    corsType: process.env.API_CORS_TYPE || 'literal'
-}
+    corsPolicy: process.env.API_CORS_POLICY || "http://localhost:3000",
+    corsType: process.env.API_CORS_TYPE || "literal",
+};
 
+console.log("appConfig ", JSON.stringify(appConfig));
 
-console.log('appConfig ', JSON.stringify(appConfig))
+const corsOptions = generateCorsOptions(
+    appConfig.corsType,
+    appConfig.corsPolicy
+);
 
-const corsOptions = generateCorsOptions(appConfig.corsType, appConfig.corsPolicy)
+console.log("corsOptions ", corsOptions);
 
-console.log('corsOptions ', corsOptions)
+app.use(cors(corsOptions));
+app.use(express.json());
 
-app.use(cors(corsOptions))
-app.use(express.json())
+app.options("*", cors(corsOptions));
 
-app.options('*', cors(corsOptions))
+app.get("/", (req, res) => {
+    res.status(200).json({ message: "hello world" });
+});
 
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'hello world'})
-})
+app.get("/authenticate", authController.getUser);
 
-app.get('/authenticate', authController.getUser)
+app.get("/authorization", (req, res) => {
+    // Serve the OAuth login page
+    // Which will make a POST to /authorization with username password and other OAuth URI params
+    res.status(200);
+    res.set("Content-Type", "text/html");
+    res.sendFile(path.join(__dirname, "/oauth.html"));
+});
 
-app.get('/authenticate/new', authController.addUser)
+app.post("/authorization", authController.handleOAuthLogin);
 
-app.get('/token', authController.validCode, tokenController.getToken);
+app.post("/token", authController.validCode, tokenController.getToken);
 
-app.listen(appConfig.listenPort)
+// Allow client apps to register themselves to be able to use the Wayfarer OAuth as a auth service
+app.post("/connect/register", authController.registerOAuthConnection);
 
-console.log(`listening on ${appConfig.listenPort}`)
+// This here explicitly to serve to fire off a second order SSRF flaw
+// Which in this case can result in arbitrary HTML execution in a browser
+app.get("/clients/:id/logo", authController.getOAuthClientLogo);
+
+app.listen(appConfig.listenPort);
+
+console.log(`listening on ${appConfig.listenPort}`);

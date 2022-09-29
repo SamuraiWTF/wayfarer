@@ -1,0 +1,38 @@
+<script>
+    function authenticate(e) {
+        //e.preventDefault();
+
+        let username = document.getElementById("username").value;
+
+        let password = document.getElementById("password").value;
+
+        fetch(
+            `https://auth.wayfarer.test:8443/authorization?${window.location.search}`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                },
+
+                body: JSON.stringify({
+                    username: username,
+
+                    password: password,
+                }),
+            }
+        ).then((res) => {
+            // redirect
+            console.log(res.headers.get("Location"));
+
+            location.replace(res.headers.get("Location"));
+        });
+    }
+</script>
+
+<h1>Wayfarer OAuth Login</h1>
+
+<input type="text" id="username" />
+
+<input type="password" id="password" />
+<button onclick="authenticate()">login</button>

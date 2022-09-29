@@ -69,6 +69,19 @@ app.get('/team/:teamId/absent', iam.validateTokenSig, teamController.getAbsentUs
 
 app.get('/team/:teamId', iam.validateTokenSig, teamController.getTeamById)
 
+app.get('/foo/:foo', (req, res) => {
+  // dumb CSP on an API XSS example 
+  let query = req.query
+  let debug = query.debug || false
+  let err_msg = new Error(`{param} could not be found`).stack
+  err_msg = err_msg.replace('{param}', decodeURI(req.params.foo))
+  res.set('Content-Type', 'text/html')
+  if (!debug) {
+    res.set('Content-Security-Policy', "default-src 'none';")
+  }
+  res.send(err_msg)
+})
+
 app.get('/team/:teamId/tickets', iam.validateTokenSig, ticketController.getTicketsByTeam)
 
 app.get('/ticket/:ticketId', iam.validateTokenSig, ticketController.getTicketDetailsById)
