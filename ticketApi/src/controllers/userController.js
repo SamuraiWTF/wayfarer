@@ -34,7 +34,7 @@ const userController = {
             let claims = jwt.decode(refreshToken)
             if(claims.exp * 1000 > Date.now()) { //multiplying to match millisecond precision
                 let authToken = createAuthToken({ id: claims.userId, username: claims.username, isadmin: claims.isAdmin })
-                res.status(200).send({ token: authToken, userid: claims.userId })
+                res.status(200).send({ token: authToken, userId: claims.userId })
             } else {
                 res.status(401).send({ code: 401, error: 'refresh token has expired', redirect: '/login' })
             }
