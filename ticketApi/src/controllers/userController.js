@@ -13,7 +13,7 @@ const userController = {
         }
         users.authenticate(req.body.username, req.body.password, req.body.stayLoggedIn).then(([data, refreshCookie]) => {
             if(req.body.stayLoggedIn) {
-                res.cookie('refreshToken', refreshCookie, { signed: true, httpOnly: true, secure: true, path: '/', sameSite: 'none', maxAge: (60000 * 60 * 24 * 30) })
+                res.cookie('refreshToken', refreshCookie, { signed: false, httpOnly: true, secure: true, path: '/', sameSite: 'none', maxAge: (60000 * 60 * 24 * 30) })
             } 
             res.status(200).send({ code: 200, data: data})
         }).catch((err) => {
