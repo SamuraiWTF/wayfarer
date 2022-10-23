@@ -1,0 +1,239 @@
+{
+	"info": {
+		"_postman_id": "c787fcd0-4c00-4066-9593-36c7286510ac",
+		"name": "Wayfarer API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/user/:id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_host}}/user/:id",
+					"host": [
+						"{{api_host}}"
+					],
+					"path": [
+						"user",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/:userId/tickets",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_host}}/user/:userId/tickets",
+					"host": [
+						"{{api_host}}"
+					],
+					"path": [
+						"user",
+						":userId",
+						"tickets"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/foo/:value",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_host}}/foo/:value",
+					"host": [
+						"{{api_host}}"
+					],
+					"path": [
+						"foo",
+						":value"
+					],
+					"variable": [
+						{
+							"key": "value",
+							"value": "test"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/admin/user/new",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"nevil the devil\",\n    \"username\": \"nevil\",\n    \"password\": \"password123\",\n    \"isadmin\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_host}}/admin/user/new",
+					"host": [
+						"{{api_host}}"
+					],
+					"path": [
+						"admin",
+						"user",
+						"new"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Grab a new token",
+					"if (pm.environment.get(\"new_token\") === \"true\") {",
+					"    const postRequest = {",
+					"        url: `${pm.environment.get(\"api_host\")}/authenticate`,",
+					"        method: 'POST',",
+					"        header: {",
+					"            'Content-Type': 'application/json'",
+					"        },",
+					"        body: {",
+					"            mode: 'raw',",
+					"            raw: JSON.stringify({",
+					"                \"username\": pm.environment.get(\"username\"),",
+					"                \"password\": pm.environment.get(\"password\")",
+					"            })",
+					"        }",
+					"    };",
+					"    pm.sendRequest(postRequest, (error, response) => {",
+					"        console.log(error ? error : response.json());",
+					"        pm.environment.set(\"auth_token\", response.json().data.token);",
+					"    });",
+					"}",
+					"",
+					"let check_unauthed = pm.environment.get(\"check_unauthed\");",
+					"",
+					"if (check_unauthed === \"true\") {",
+					"    console.log(\"Testing missing Authorization\");",
+					"    pm.environment.set(\"auth_token\", \"\"); // Remove the auth header before the req goes out",
+					"}",
+					"",
+					"pm.request.headers.add({",
+					"    key: \"Authorization\",",
+					"    value: `Bearer ${pm.environment.get(\"auth_token\")}`",
+					"});",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
