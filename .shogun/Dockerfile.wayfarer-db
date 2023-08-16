@@ -1,0 +1,9 @@
+FROM mysql:5
+
+ENV MYSQL_ROOT_PASSWORD=changeme
+COPY wayfarerDB/init/ /docker-entrypoint-initdb.d/
+
+EXPOSE 3306
+
+LABEL org.opencontainers.image.source=https://github.com/SamuraiWTF/wayfarer
+LABEL org.opencontainers.image.description="Database image wayfarer."

@@ -4,3 +4,5 @@ Vagrantfile
 .vagrant/
 bounce.sh
 **/.env
+
+.idea/

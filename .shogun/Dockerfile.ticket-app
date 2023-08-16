@@ -1,0 +1,18 @@
+FROM node:12-slim
+
+WORKDIR /app
+
+# Dependency Layer
+COPY ./ticketApp/package*.json ./
+RUN npm install
+
+# App Layer
+COPY ./ticketApp/ .
+RUN npm run build
+
+# Execute
+EXPOSE 3000
+CMD npm run start
+
+LABEL org.opencontainers.image.source=https://github.com/SamuraiWTF/wayfarer
+LABEL org.opencontainers.image.description="Main ticket app for wayfarer."
