@@ -1,0 +1,40 @@
+version: '3'
+services:
+  sqldb:
+    build:
+      context: ..
+      dockerfile: .shogun/Dockerfile.wayfarer-db
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      constraint: node==node01
+
+  ticketapp:
+    build:
+      context: ..
+      dockerfile: .shogun/Dockerfile.ticket-app
+    ports:
+      - "8080:3000"
+    links:
+      - sqldb
+    depends_on:
+      - sqldb
+    environment:
+        - APP_PORT=8080
+        - REACT_APP_API_ORIGIN=http://localhost:8081
+
+  ticketapi:
+    build:
+      context: ..
+      dockerfile: .shogun/Dockerfile.ticket-api
+    ports:
+      - "8081:3001"
+    links:
+      - sqldb
+    depends_on:
+      - sqldb
+    environment:
+        - API_PUBLIC_PORT=8081
+        - API_PORT=3001
+        - API_CORS_TYPE=literal
+        - API_CORS_POLICY=http://localhost:8080
+        - REACT_APP_API_ORIGIN=http://localhost:8081
