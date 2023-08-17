@@ -24,7 +24,7 @@ jobs:
 
     - name : Build and push database image
       run: |
-        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/wayfarer
+        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/wayfarer-db
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
         [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
@@ -37,7 +37,7 @@ jobs:
 
     - name : Build and push ticket-app image
       run: |
-        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/wayfarer
+        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/wayfarer-app
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
         [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
@@ -50,7 +50,7 @@ jobs:
 
     - name : Build and push ticket-api image
       run: |
-        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/wayfarer
+        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/wayfarer-api
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
         [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
