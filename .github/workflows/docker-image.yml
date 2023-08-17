@@ -1,0 +1,62 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name : Build and push database image
+      run: |
+        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/wayfarer
+        IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+        [ "$VERSION" == "main" ] && VERSION=latest
+        echo IMAGE_ID=$IMAGE_ID
+        echo VERSION=$VERSION
+        docker build . --file .shogun/Dockerfile.wayfarer-db --tag wayfarer-db
+        docker tag wayfarer-db $IMAGE_ID:$VERSION
+        docker push $IMAGE_ID:$VERSION
+
+    - name : Build and push ticket-app image
+      run: |
+        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/wayfarer
+        IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+        [ "$VERSION" == "main" ] && VERSION=latest
+        echo IMAGE_ID=$IMAGE_ID
+        echo VERSION=$VERSION
+        docker build . --file .shogun/Dockerfile.ticket-app --tag ticket-app
+        docker tag ticket-app $IMAGE_ID:$VERSION
+        docker push $IMAGE_ID:$VERSION
+
+    - name : Build and push ticket-api image
+      run: |
+        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/wayfarer
+        IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+        [ "$VERSION" == "main" ] && VERSION=latest
+        echo IMAGE_ID=$IMAGE_ID
+        echo VERSION=$VERSION
+        docker build . --file .shogun/Dockerfile.ticket-api --tag ticket-api
+        docker tag ticket-api $IMAGE_ID:$VERSION
+        docker push $IMAGE_ID:$VERSION
