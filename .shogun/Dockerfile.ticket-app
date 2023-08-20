@@ -1,5 +1,5 @@
-FROM node:12-slim
-
+# Build Stage
+FROM node:12-slim AS build-stage
 WORKDIR /app
 
 # Dependency Layer
@@ -10,9 +10,15 @@ RUN npm install
 COPY ./ticketApp/ .
 RUN npm run build
 
-# Execute
-EXPOSE 3000
-CMD npm run start
+# Production Stage
+FROM nginx:alpine
 
+# Copy the built static files from the build stage
+COPY --from=build-stage /app/build /usr/share/nginx/html
+
+# Expose the port Nginx is running on
+EXPOSE 80
+
+# Labels
 LABEL org.opencontainers.image.source=https://github.com/SamuraiWTF/wayfarer
 LABEL org.opencontainers.image.description="Main ticket app for wayfarer."

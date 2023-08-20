@@ -2,6 +2,7 @@ FROM mysql:5
 
 ENV MYSQL_ROOT_PASSWORD=changeme
 COPY wayfarerDB/init/ /docker-entrypoint-initdb.d/
+COPY .shogun/my.cnf /etc/mysql/my.cnf
 
 EXPOSE 3306
 

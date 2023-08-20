@@ -13,7 +13,7 @@ services:
       context: ..
       dockerfile: .shogun/Dockerfile.ticket-app
     ports:
-      - "8080:3000"
+      - "8080:80"
     links:
       - sqldb
     depends_on:
