@@ -1,5 +1,7 @@
+import { config } from '../config';
+
 const useApiOrigin = () => {
-    return process.env.REACT_APP_API_ORIGIN || 'http://localhost:3001' // If not specified, default to local dev.
+    return config.REACT_APP_API_ORIGIN;
 }
 
 export default useApiOrigin;

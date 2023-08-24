@@ -3,6 +3,7 @@ import Routes from './Routes';
 import AuthContext from './components/context/AuthContext';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import './App.css';
+import useConfig from "./useConfig";
 
 const queryClient = new QueryClient()
 
@@ -10,6 +11,7 @@ function App() {
   const [currentUserId, setCurrentUserId] = useState(localStorage.getItem('currentUserId'));
   const [authToken, setAuthToken] = useState(localStorage.getItem('authToken'));
   const [isAdmin, setIsAdmin] = useState(sessionStorage.getItem('isAdmin') || false);
+  const { isLoaded, config } = useConfig();
   const authStatusChanged = () => {
     setCurrentUserId(localStorage.getItem('currentUserId'));
     setAuthToken(localStorage.getItem('authToken'));

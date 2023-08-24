@@ -14,11 +14,21 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy the built static files from the build stage
+# We need to set the configuration file for the app using a script so that
+# we can use environment variables from the runtime (not buildtime) second stage container.
 COPY --from=build-stage /app/build /usr/share/nginx/html
+COPY .shogun/app_config.json /usr/share/nginx/html/config.json
+COPY .shogun/set_config.sh /opt/set_config.sh
+RUN chmod +x /opt/set_config.sh
 
 # Expose the port Nginx is running on
 EXPOSE 80
 
+CMD ["/bin/sh", "-c", "/opt/set_config.sh && nginx -g 'daemon off;'"]
+
 # Labels
 LABEL org.opencontainers.image.source=https://github.com/SamuraiWTF/wayfarer
 LABEL org.opencontainers.image.description="Main ticket app for wayfarer."
+
+
+
